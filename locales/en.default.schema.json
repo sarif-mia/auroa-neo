@@ -651,7 +651,7 @@
     },
     "color_swatch": {
       "name": "Swatches",
-      "description": "Learn about [swatches](https://getsitecontrol.gitbook.io/aurora-theme/theme-settings/swatches)",
+      "description": "Learn about swatches",
       "primary_swatch_option_header": {
         "content": "Primary option",
         "info": "Show swatches in product cards, product pages, and filters"
@@ -734,7 +734,7 @@
       },
       "secondary_custom_colors_and_patterns": {
         "label": "Custom colors and patterns",
-        "info": "Place each rule in a separate line. [Learn how to add color swatches](https://getsitecontrol.gitbook.io/aurora-theme/theme-settings/swatches#custom-colors-and-patterns)"
+        "info": "Place each rule in a separate line. Learn how to add color swatches"
       }
     },
     "appearance": {
@@ -1215,7 +1215,7 @@
       },
       "icon": {
         "label": "Preset icon",
-        "info": "[Table of icons and labels](https://getsitecontrol.gitbook.io/aurora-theme/tutorials/table-of-icons-and-labels)",
+        "info": "Table of icons and labels",
         "info_with_link": "[Table of icons and labels](https://getsitecontrol.gitbook.io/aurora-theme/tutorials/table-of-icons-and-labels)",
         "none_icon_label": "None",
         "general_group": {
@@ -1350,7 +1350,7 @@
         "unit": "px"
       },
       "buy_icons_settings": {
-        "icons_info": "[See icon styles table](https://getsitecontrol.gitbook.io/aurora-theme/tutorials/table-of-icons-and-labels#quick-buy-icons)",
+        "icons_info": "See icon styles table for reference",
         "cart_icon_type": {
           "label_cart": "Cart icon",
           "label_add_to_cart": "'Add to cart' icon",
