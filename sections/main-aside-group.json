@@ -1,0 +1,128 @@
+{
+  "type": "aside",
+  "name": "t:sections.aside_group.name",
+  "sections": {
+    "cart-drawer": {
+      "type": "cart-drawer",
+      "blocks": {
+        "ea21c0fe-a559-4952-80f6-b48f0cf168e5": {
+          "type": "items",
+          "settings": {}
+        },
+        "9338fba6-0a76-473a-af2b-1ca5de5581a8": {
+          "type": "countdown",
+          "settings": {
+            "hide_for_empty_cart": true,
+            "mode": "evergreen",
+            "year": "2024",
+            "month": "january",
+            "day": "3",
+            "hour": "0",
+            "minute": "0",
+            "hide_on_complete": true,
+            "evergreen_unit": "hour",
+            "evergreen_value": 24,
+            "evergreen_on_complete": "restart",
+            "timer_desktop_width": 100,
+            "background_type": "separate",
+            "background_style": "solid",
+            "outline_background_border_thickness": 1,
+            "enable_separators": true,
+            "captitalize_unit_labels": true,
+            "heading": "Season sale ends soon!",
+            "heading_size": "h5",
+            "body": "",
+            "body_size": "body3",
+            "discount_code": "REVELLA505",
+            "content_alignment": "center",
+            "color_scheme_variant": "own",
+            "color_scheme": "2",
+            "show_background": false
+          }
+        },
+        "cfe9eb93-b42b-4155-8a69-e1045e4e145f": {
+          "type": "on_side_cart_related",
+          "settings": {
+            "recommendations_type": "manually",
+            "in_cart_related_layout_desktop": "vertical-cards",
+            "in_cart_related_layout": "carousel-with-horizontal-cards",
+            "cards_to_show": 10,
+            "desktop_space_between_cards": 12,
+            "mobile_space_between_cards": 12,
+            "hide_for_empty_cart": false,
+            "hide_on_mobile": false,
+            "heading": "You may also like",
+            "heading_size": "h6",
+            "heading_alignment": "center",
+            "heading_alignment_mobile": "left",
+            "img_ratio": "inherited",
+            "img_ratio_resize": "fill",
+            "content_alignment": "left",
+            "hide_product_prices": false,
+            "autoplay_mode": "disabled",
+            "autoplay_interval": 3,
+            "show_arrows_on_hover": true,
+            "color_scheme_variant": "own",
+            "color_scheme": "secondary",
+            "enable_color_background": false,
+            "cards_color_background": false
+          }
+        }
+      },
+      "block_order": [
+        "ea21c0fe-a559-4952-80f6-b48f0cf168e5",
+        "9338fba6-0a76-473a-af2b-1ca5de5581a8",
+        "cfe9eb93-b42b-4155-8a69-e1045e4e145f"
+      ],
+      "settings": {
+        "img_ratio": "default",
+        "img_ratio_resize": "fill",
+        "show_order_note": true,
+        "show_shipping_calculator": true,
+        "show_taxes_and_shipping_costs": true,
+        "show_currency_code": true,
+        "show_dynamic_buttons": false,
+        "cart_button_style": "secondary",
+        "checkout_button_style": "primary",
+        "empty_cart_recommendations_text": "<p>If you don't know where to start, try these amazing collections.</p>",
+        "empty_cart_recommendations_show_collection_images": true,
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default"
+      }
+    },
+    "search-sidebar": {
+      "type": "search-sidebar",
+      "settings": {
+        "img_ratio": "default",
+        "img_ratio_resize": "fill",
+        "results_per_category": 10,
+        "enable_extended_search": false,
+        "recommendations_title": "Most searched",
+        "recommendations_queries": "Activewear set\nOne-piece\nRompers\nSkirt",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default"
+      }
+    },
+    "quick-view": {
+      "type": "quick-view",
+      "settings": {
+        "view_type": "drawer",
+        "img_ratio": "default",
+        "img_ratio_resize": "cover",
+        "show_dots": "dot",
+        "dots_style": "dots_white",
+        "dots_size": "l",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default"
+      }
+    }
+  },
+  "order": [
+    "cart-drawer",
+    "search-sidebar",
+    "quick-view"
+  ]
+}

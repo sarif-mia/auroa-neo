@@ -1,0 +1,165 @@
+{%- liquid
+  assign add_desktop_side_paddings = section.settings.add_desktop_side_paddings
+  assign add_mobile_side_paddings = section.settings.add_mobile_side_paddings
+  assign section_spacing_top = section.settings.section_spacing_top
+  assign section_spacing_bottom = section.settings.section_spacing_bottom
+  assign section_spacing_top_mobile = section.settings.section_spacing_top_mobile
+  assign section_spacing_bottom_mobile = section.settings.section_spacing_bottom_mobile
+
+  assign color_scheme = settings.default_color_scheme
+  if section.settings.color_scheme_variant == 'own'
+    assign color_scheme = section.settings.color_scheme
+  endif
+
+  assign container_size = section.settings.container_size
+  assign round_level = section.settings.round_level
+
+  assign block_layout = section.settings.layout
+
+  assign section_id_with_quick_view_prefix = section.id | append: '---QuickView'
+  assign section_id_with_main_section_prefix = section.id | append: '---MainSection'
+
+  if section.settings.media_to_content_ratio != 'fixed'
+    assign media_to_content_ratio = section.settings.media_to_content_ratio | split: '-'
+    assign product_media_width = media_to_content_ratio | first
+    assign product_info_width = media_to_content_ratio | last
+  endif
+
+  assign rating_block = section.blocks | where: 'type', 'rating' | first
+-%}
+
+{%- liquid
+  assign show_background = section.settings.show_background
+  assign color_container_background = false
+
+  if show_background == false and settings.default_color_scheme.settings.background != color_scheme.settings.background
+    assign color_container_background = true
+  endif
+-%}
+
+{% liquid
+  assign product_media = product.media | default: (1..12)
+  assign featured_media = product.selected_or_first_available_variant.featured_image
+  assign media_array = product_media
+
+  assign show_only_selected_variants = section.settings.show_only_selected_variants
+  if show_only_selected_variants
+    assign product_options = product.options | join: ',' | split: ','
+    assign product_selected_options = product.selected_or_first_available_variant.options | join: ',' | split: ','
+    assign all_arr = ''
+
+    for option in product_options
+      assign option_downcase = option | downcase
+
+      for selected_option in product_selected_options
+        assign selected_option_downcase = selected_option | downcase
+        assign variable = '#' | append: option_downcase | append: '_' | append: selected_option_downcase | append: ','
+        assign all_arr = all_arr | append: variable
+      endfor
+    endfor
+
+    assign media_array = product_media | reject: 'id', featured_media.id
+
+    for media in product_media
+      assign alt = media.alt | strip_html | escape | downcase
+
+      assign to_render = false
+
+      if show_only_selected_variants
+        if all_arr contains alt and media.id != featured_media.id or media.id == blank
+          assign to_render = true
+        endif
+
+      else
+        if media.id != featured_media.id or media.id == blank
+          assign to_render = true
+        endif
+      endif
+
+      if to_render == false
+        assign media_array = media_array | reject: 'alt', media.alt
+      endif
+    endfor
+
+    if media_array.size == 0
+      assign media_array = product_media
+    endif
+  endif
+%}
+
+{% capture css %}
+  {% style %}
+    .section-{{section.id}} {
+      --gsc-section-spacing-top: var(--gsc-padding-block-{{ section_spacing_top_mobile }});
+      --gsc-section-spacing-bottom: var(--gsc-padding-block-{{ section_spacing_bottom_mobile }});
+      --gsc-mobile-space-between-media: var(--gsc-gap-{{ section.settings.space_between_cards_mobile }});
+      --gsc-thumbnail-width: 64px;
+
+      {% if rating_block != blank %}
+        --gsc-rating-stars-color: {{ rating_block.settings.product_rating_color }}
+      {% endif %}
+    }
+
+    @media {% render 'media-queries', screen: 'md' %} {
+      .section-{{section.id}} {
+        --gsc-section-spacing-top: var(--gsc-padding-block-{{ section_spacing_top }});
+        --gsc-section-spacing-bottom: var(--gsc-padding-block-{{ section_spacing_bottom }});
+        --gsc-desktop-space-between-media: var(--gsc-gap-{{ section.settings.space_between_cards }});
+        {% if section.settings.media_to_content_ratio != 'fixed' %}
+          --gsc-product-media-width: {{ product_media_width }}%;
+          --gsc-product-info-width: {{ product_info_width }}%;
+        {% else %}
+          --gsc-product-fixed-content-width: {{ section.settings.fixed_content_width }}rem;
+        {% endif %}
+      }
+    }
+
+    @media screen and (min-width: 1016px) {
+      .section-{{section.id}} {
+        --gsc-thumbnail-width: {{ section.settings.thumbnails_size }}px;
+      }
+    }
+  {% endstyle %}
+{% endcapture %}
+
+{% render 'inline-css-minifier', css: css %}
+
+<script>
+  try {
+    window.auroraProductTags = JSON.parse('{{product.tags | split: " "}}')
+    if (!Array.isArray(window.auroraProductTags)) {
+      throw 'Product tags is not array'
+    }
+  } catch (error) {
+    window.auroraProductTags = []
+  }
+</script>
+
+<div
+  class='product section section-{{ section.id }} color-{{ color_scheme }} {% if round_level != 'default' %}round-level-{{round_level}}{% endif %} product--page spacing-block {% if add_mobile_side_paddings %}spacing-inline-mobile{% endif %} {% if add_desktop_side_paddings %}spacing-inline-desktop{% endif %} {% if color_container_background == false %}section-background{% endif %} {% if block_layout contains 'column' %} product--with-desktop-media-grid {% endif %} {% if block_layout == 'thumbnails-left' or block_layout == 'thumbnails-right' or block_layout == 'thumbnails-bottom' %}  {% if container_size == 'page-width' %} product--with-page-width-container-and-desktop-media-carousel {% else %} product--with-desktop-media-carousel {% endif %}  {% endif %}'
+>
+  <div class='container container--{{ container_size }} product__container {% if color_container_background %}container-background{% endif %}'>
+    {%- render 'product',
+      product: product,
+      media_array: media_array,
+      section: section,
+      sectionId: section_id_with_main_section_prefix,
+      block_layout: block_layout,
+      with_mobile_side_paddings: add_mobile_side_paddings
+    -%}
+  </div>
+</div>
+
+{% if request.path contains '/gsc-quick-view' or request.path contains 'recommendations' %}
+  <div style='display: none;' data-quick-view-product-id='{{ product.id }}'>
+    {%- render 'quick-view',
+      product: product,
+      media_array: media_array,
+      featured_media: featured_media,
+      section: section,
+      sectionId: section_id_with_quick_view_prefix
+    -%}
+  </div>
+{% endif %}
+
+{% render 'save-section-data-in-global-scope', section: section %}

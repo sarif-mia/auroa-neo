@@ -1,0 +1,95 @@
+{% liquid
+  assign id = id | default: null
+  assign class = class | default: ''
+  assign attributes = attributes | default: null
+%}
+
+<shipping-calculator
+  {% if id %}
+    id='{{ id }}'
+  {% endif %}
+  class='shipping-calculator {{ class }}'
+  {% if attributes %}
+    {{ attributes }}
+  {% endif %}
+>
+  <div class='shipping-calculator__title'>
+    {{ 'general.shipping_calculator.store_front.title' | t }}
+  </div>
+
+  <div class='shipping-calculator__fields'>
+    <div class='shipping-calculator__field'>
+      <label class='shipping-calculator__label' for='ShippinCalculator-Countries'>
+        {{ 'general.shipping_calculator.store_front.country' | t }}
+      </label>
+
+      {% capture country_select %}
+        <select
+          id="ShippinCalculator-Countries"
+          class='select select--solid select--large'
+          {% if shop.customer_accounts_enabled and customer and customer.default_address.country != '' %}
+            data-default-country="{{ customer.default_address.country }}"
+          {% endif %}
+        >
+          {{ country_option_tags }}
+        </select>
+      {% endcapture %}
+
+      {% render 'custom-select', select: country_select %}
+    </div>
+
+    <div class='shipping-calculator__field'>
+      <label class='shipping-calculator__label' for='ShippinCalculator-Provinces'>
+        {{ 'general.shipping_calculator.store_front.province' | t }}
+      </label>
+
+      {% capture province_select %}
+        <select
+          id="ShippinCalculator-Provinces"
+          class='select select--solid select--large'
+          {% if shop.customer_accounts_enabled and customer and customer.default_address.province != '' %}
+            data-default-province="{{ customer.default_address.province }}"
+          {% endif %}
+        ></select>
+      {% endcapture %}
+
+      {% render 'custom-select', select: province_select %}
+    </div>
+
+    <div class='shipping-calculator__field'>
+      <label class='shipping-calculator__label' for='ShippinCalculator-PostalCode'>
+        {{ 'general.shipping_calculator.store_front.zip' | t }}
+      </label>
+
+      <input
+        id='ShippinCalculator-PostalCode'
+        class='input input--large input--solid'
+        type='text'
+        placeholder='{{ 'general.shipping_calculator.store_front.zip' | t }}'
+        {% if shop.customer_accounts_enabled and customer %}
+          value='{{ customer.default_address.zip }}'
+        {% endif %}
+      >
+    </div>
+  </div>
+
+  <div class='shipping-calculator__results' hidden>
+    <p class='shipping-calculator__success-title'>
+      {{ 'general.shipping_calculator.store_front.success_title' | t }}
+    </p>
+    <p class='shipping-calculator__errors-title'>
+      {{ 'general.shipping_calculator.store_front.error_title' | t }}
+    </p>
+    <ul></ul>
+  </div>
+
+  <button
+    id='ShippinCalculator-CalculateButton'
+    type='text'
+    class='shipping-calculator__button btn btn--primary btn--solid btn--lg'
+    aria-label='{{ 'general.shipping_calculator.screen_reader.calculate' | t }}'
+  >
+    <span>{{ 'general.shipping_calculator.store_front.calculate' | t }}</span>
+    <div class='loading-spinner btn__loading-spinner'></div>
+  </button>
+</shipping-calculator>

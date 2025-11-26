@@ -1,0 +1,197 @@
+{
+  "sections": {
+    "page": {
+      "type": "page",
+      "disabled": true,
+      "settings": {
+        "show_heading": true,
+        "container_size": "large",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "s",
+        "section_spacing_bottom": "s"
+      }
+    },
+    "2c9af0b4-5ddb-4cbf-a05c-a2bf2a7dfc6a": {
+      "type": "images-with-text",
+      "blocks": {
+        "template--16342959620337__2c9af0b4-5ddb-4cbf-a05c-a2bf2a7dfc6a-16805323968a4eb249-0": {
+          "type": "image",
+          "settings": {
+            "media_type": "image"
+          }
+        },
+        "template--16342959620337__2c9af0b4-5ddb-4cbf-a05c-a2bf2a7dfc6a-16805323968a4eb249-1": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "media_type": "image"
+          }
+        },
+        "template--16342959620337__2c9af0b4-5ddb-4cbf-a05c-a2bf2a7dfc6a-16805323968a4eb249-2": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "media_type": "image"
+          }
+        },
+        "template--16342959620337__2c9af0b4-5ddb-4cbf-a05c-a2bf2a7dfc6a-16805323968a4eb249-3": {
+          "type": "image",
+          "disabled": true,
+          "settings": {
+            "media_type": "image"
+          }
+        }
+      },
+      "block_order": [
+        "template--16342959620337__2c9af0b4-5ddb-4cbf-a05c-a2bf2a7dfc6a-16805323968a4eb249-0",
+        "template--16342959620337__2c9af0b4-5ddb-4cbf-a05c-a2bf2a7dfc6a-16805323968a4eb249-1",
+        "template--16342959620337__2c9af0b4-5ddb-4cbf-a05c-a2bf2a7dfc6a-16805323968a4eb249-2",
+        "template--16342959620337__2c9af0b4-5ddb-4cbf-a05c-a2bf2a7dfc6a-16805323968a4eb249-3"
+      ],
+      "settings": {
+        "content_layout": "left",
+        "image_layout": "grid",
+        "img_ratio": 0.8,
+        "rotate_images": false,
+        "icon_type": "none",
+        "icon": "none",
+        "subheading": "CONTACT US",
+        "heading": "We're here to help",
+        "heading_size": "h2",
+        "body": "<p>For online order enquiries including delivery, returns, exchanges and technical issues, please contact us.</p>",
+        "body_size": "body3",
+        "content_alignment": "center",
+        "content_paddings_size": "3xl",
+        "first_button_text": "",
+        "first_button_link": "",
+        "first_button_style": "solid",
+        "second_button_text": "",
+        "second_button_link": "",
+        "second_button_style": "solid",
+        "container_size": "page-width",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xxl",
+        "section_spacing_bottom": "xxl"
+      }
+    },
+    "multicolumn": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_1": {
+          "type": "column",
+          "settings": {
+            "media_type": "image",
+            "image_ratio": 1,
+            "desktop_image_width": 10,
+            "mobile_image_width": 10,
+            "title": "Address",
+            "text": "<p>2205 Rosewood Lane</p>",
+            "link_text": "",
+            "btn_style": "link"
+          }
+        },
+        "column_2": {
+          "type": "column",
+          "settings": {
+            "media_type": "image",
+            "image_ratio": 1,
+            "desktop_image_width": 10,
+            "mobile_image_width": 10,
+            "title": "Phone",
+            "text": "<p>213 443 6364</p>",
+            "link_text": "",
+            "btn_style": "link"
+          }
+        },
+        "column_3": {
+          "type": "column",
+          "settings": {
+            "media_type": "image",
+            "image_ratio": 1,
+            "desktop_image_width": 10,
+            "mobile_image_width": 10,
+            "title": "Email",
+            "text": "<p>hello@revellabel.com</p>",
+            "link_text": "",
+            "btn_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "column_1",
+        "column_2",
+        "column_3"
+      ],
+      "settings": {
+        "desktop_layout": "grid",
+        "mobile_layout": "grid",
+        "desktop_columns": 3,
+        "space_between_cards": "m",
+        "title": "",
+        "heading_size": "h7",
+        "text": "",
+        "body_size": "body4",
+        "content_alignment": "center",
+        "column_heading_size": "h6",
+        "column_body_size": "body4",
+        "column_alignment": "center",
+        "content_spacing": "xxxl",
+        "show_column_background": true,
+        "btn_text": "",
+        "btn_style": "outline",
+        "autoplay_mode": "disabled",
+        "autoplay_interval": 3,
+        "show_navigation_on_hover": true,
+        "container_size": "large",
+        "round_level": "default",
+        "color_scheme_variant": "own",
+        "color_scheme": "scheme-ade611bd-c70f-49ac-b074-ae619e9668da",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xxxl",
+        "section_spacing_bottom": "xxxl"
+      }
+    },
+    "contact-form": {
+      "type": "contact-form",
+      "settings": {
+        "title": "Send a message",
+        "heading_size": "h5",
+        "text": "",
+        "body_size": "body3",
+        "text_align": "center",
+        "input_style": "solid",
+        "button_style": "primary",
+        "show_phone": true,
+        "show_signup_checkbox": false,
+        "signup_checkbox_text": "I agree to the consent rules",
+        "container_size": "xsmall",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xxxl",
+        "section_spacing_bottom": "xxxl"
+      }
+    }
+  },
+  "order": [
+    "page",
+    "2c9af0b4-5ddb-4cbf-a05c-a2bf2a7dfc6a",
+    "multicolumn",
+    "contact-form"
+  ]
+}

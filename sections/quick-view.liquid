@@ -1,0 +1,326 @@
+{% liquid
+  assign view_type = section.settings.view_type
+  assign img_ratio = section.settings.img_ratio
+  assign round_level = section.settings.round_level
+
+  assign first_collection = collections | first
+  assign target_product = first_collection.products | first
+
+  assign color_scheme = settings.default_color_scheme
+  if section.settings.color_scheme_variant == 'own'
+    assign color_scheme = section.settings.color_scheme
+  endif
+%}
+
+{% if view_type == 'popup' and section.settings.show_dots != 'none' %}
+  {% capture carousel_dots_class %}
+    {% liquid
+      assign show_dots = section.settings.show_dots
+      assign dots_style = section.settings.dots_style
+      assign dots_size = section.settings.dots_size
+
+      assign dots_class = 'dynamic-dots'
+      assign dots_class = dots_class | append: ' dynamic-dots--size-' | append: dots_size
+
+      if show_dots == 'line'
+        assign dots_class = dots_class | append: ' dynamic-dots--line-type'
+      endif
+
+      if dots_style contains 'white'
+        assign dots_class = dots_class | append: ' dynamic-dots--dots-light'
+      else
+        assign dots_class = dots_class | append: ' dynamic-dots--dots-dark'
+      endif
+
+      if dots_style contains 'bg'
+        if dots_style contains 'white'
+          assign dots_class = dots_class | append: ' dynamic-dots--bg-light dynamic-dots--bg-blur'
+        else
+          assign dots_class = dots_class | append: ' dynamic-dots--bg-dark dynamic-dots--bg-blur'
+        endif
+      endif
+    %}
+
+    {{dots_class}}
+  {% endcapture %}
+{% endif %}
+
+{% if img_ratio != 'default' %}
+  <style>
+    .quick-view.quick-view-{{ section.id }},
+    .quick-view.quick-view-{{ section.id }} .shape-variable {
+      {% case img_ratio %}
+        {% when 'square' %}
+          --gsc-quick-view-aspect-ratio: var(--gsc-square-image-ratio-numeric);
+          --gsc-shape-variable-ratio: var(--gsc-square-image-ratio);
+        {% when 'portrait' %}
+          --gsc-quick-view-aspect-ratio: var(--gsc-portrait-image-ratio-numeric);
+          --gsc-shape-variable-ratio: var(--gsc-portrait-image-ratio);
+        {% when 'portrait-xl' %}
+          --gsc-quick-view-aspect-ratio: var(--gsc-large-portrait-image-ratio-numeric);
+          --gsc-shape-variable-ratio: var(--gsc-large-portrait-image-ratio);
+        {% when 'landscape' %}
+          --gsc-quick-view-aspect-ratio: var(--gsc-landscape-image-ratio-numeric);
+          --gsc-shape-variable-ratio: var(--gsc-landscape-image-ratio);
+      {% endcase %}
+      
+      --gsc-shape-variable-fill-mode: {{ section.settings.img_ratio_resize }};
+      --gsc-shape-variable-background: var(--gsc-product-card-media-bg-color, transparent);
+    }
+  </style>
+{% endif %}
+
+<quick-view
+  class='quick-view quick-view-{{ section.id }} quick-view--{{ view_type }} color-{{ color_scheme }} {% if round_level != 'default' %}round-level-{{round_level}}{% endif %} {% if img_ratio != 'default' %}custom-shape-container{% endif %}'
+  id='Quick-view'
+  data-with-overlay='only-desktop'
+  data-overlay-important
+  data-with-close-on-outside
+  data-with-close-on-escape
+  data-target-id='QuickViewProduct'
+  data-open-direction='right'
+  data-sidebar-section
+  data-section-id='{{ section.id }}'
+  data-default-product-url='{{ target_product.url }}'
+  data-default-product-id='{{ target_product.id }}'
+  data-view-type='{{ view_type }}'
+  {% if carousel_dots_class %}
+    data-dots-class='{{ carousel_dots_class }}'
+  {% endif %}
+>
+  <template data-sidebar-template='Quick-view'>
+    <div data-sidebar-body></div>
+  </template>
+</quick-view>
+
+{% render 'save-section-data-in-global-scope', section: section %}
+
+{% schema %}
+{
+  "name": "t:sections.quick_view.name",
+  "tag": "aside",
+  "class": "section--with-sticky-elements",
+  "enabled_on": {
+    "groups": ["aside"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.quick_view.description"
+    },
+    {
+      "type": "select",
+      "id": "view_type",
+      "options": [
+        {
+          "value": "drawer",
+          "label": "t:sections.quick_view.view_type.options.drawer"
+        },
+        {
+          "value": "popup",
+          "label": "t:sections.quick_view.view_type.options.modal"
+        }
+      ],
+      "default": "drawer",
+      "label": "t:sections.quick_view.view_type.label"
+    },
+    {
+      "type": "select",
+      "id": "img_ratio",
+      "options": [
+        {
+          "value": "default",
+          "label": "Inherit"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.general_section_settings.img_ratio_option_square_label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.general_section_settings.img_ratio_option_portrait_label"
+        },
+        {
+          "value": "portrait-xl",
+          "label": "t:sections.general_section_settings.img_ratio_option_portrait_xl_label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.general_section_settings.img_ratio_option_landscape_label"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.general_section_settings.ratio_label"
+    },
+    {
+      "type": "select",
+      "id": "img_ratio_resize",
+      "options": [
+        {
+          "value": "cover",
+          "label": "t:sections.general_section_settings.card_img_resize_fill_label"
+        },
+        {
+          "value": "contain",
+          "label": "t:sections.general_section_settings.card_img_resize_fit_label"
+        }
+      ],
+      "default": "cover",
+      "label": "t:sections.general_section_settings.card_img_resize_label",
+      "visible_if": "{{ section.settings.img_ratio != 'default' }}"
+    },
+    {
+      "type": "select",
+      "id": "show_dots",
+      "label": "Dots",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.general_section_settings.dots_style.show_dots.options.none"
+        },
+        {
+          "value": "dot",
+          "label": "t:sections.general_section_settings.dots_style.show_dots.options.basic"
+        },
+        {
+          "value": "line",
+          "label": "t:sections.general_section_settings.dots_style.show_dots.options.pills"
+        }
+      ],
+      "default": "dot",
+      "visible_if": "{{ section.settings.view_type == 'popup' }}"
+    },
+    {
+      "type": "select",
+      "id": "dots_style",
+      "label": "Style",
+      "options": [
+        {
+          "value": "dots_white",
+          "label": "t:sections.general_section_settings.dots_style.dots_style.options.dots_white"
+        },
+        {
+          "value": "dots_white_with_bg",
+          "label": "t:sections.general_section_settings.dots_style.dots_style.options.dots_white_with_bg"
+        },
+        {
+          "value": "dots_black",
+          "label": "t:sections.general_section_settings.dots_style.dots_style.options.dots_black"
+        },
+        {
+          "value": "dots_black_with_bg",
+          "label": "t:sections.general_section_settings.dots_style.dots_style.options.dots_black_with_bg"
+        }
+      ],
+      "default": "dots_white",
+      "visible_if": "{{ section.settings.view_type == 'popup' and section.settings.show_dots != 'none' }}"
+    },
+    {
+      "type": "select",
+      "id": "dots_size",
+      "label": "Size",
+      "options": [
+        {
+          "value": "l",
+          "label": "t:sections.general_section_settings.dots_style.dots_size.options.large"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.general_section_settings.dots_style.dots_size.options.medium"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.general_section_settings.dots_style.dots_size.options.small"
+        }
+      ],
+      "default": "l",
+      "visible_if": "{{  section.settings.view_type == 'popup' and section.settings.show_dots != 'none' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.general_section_settings.appearance.header_title"
+    },
+    {
+      "type": "select",
+      "id": "round_level",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:settings_schema.appearance.round_level.options.default"
+        },
+        {
+          "value": "0",
+          "label": "t:settings_schema.appearance.round_level.options.option_0"
+        },
+        {
+          "value": "1",
+          "label": "t:settings_schema.appearance.round_level.options.option_1"
+        },
+        {
+          "value": "2",
+          "label": "t:settings_schema.appearance.round_level.options.option_2"
+        },
+        {
+          "value": "3",
+          "label": "t:settings_schema.appearance.round_level.options.option_3"
+        },
+        {
+          "value": "4",
+          "label": "t:settings_schema.appearance.round_level.options.option_4"
+        },
+        {
+          "value": "5",
+          "label": "t:settings_schema.appearance.round_level.options.option_5"
+        },
+        {
+          "value": "6",
+          "label": "t:settings_schema.appearance.round_level.options.option_6"
+        },
+        {
+          "value": "7",
+          "label": "t:settings_schema.appearance.round_level.options.option_7"
+        },
+        {
+          "value": "8",
+          "label": "t:settings_schema.appearance.round_level.options.option_8"
+        }
+      ],
+      "default": "default",
+      "label": "t:settings_schema.appearance.round_level.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_variant",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.default"
+        },
+        {
+          "value": "own",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.own"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.general_section_settings.color_scheme_variant.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "2",
+      "label": "t:sections.general_section_settings.color_scheme_label",
+      "visible_if": "{{ section.settings.color_scheme_variant == 'own' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.quick_view.name",
+      "settings": {
+        "color_scheme": "default",
+        "view_type": "drawer",
+        "img_ratio": "default"
+      }
+    }
+  ]
+}
+{% endschema %}

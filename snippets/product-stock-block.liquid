@@ -1,0 +1,34 @@
+{%- liquid
+  assign show_inventory_status = block.settings.show_inventory_status
+  assign inventory_threshhold = block.settings.inventory_threshhold
+
+  assign inventory_notice_type = block.settings.inventory_notice_type
+  assign high_inventory_text = block.settings.high_inventory_text
+  assign low_inventory_text = block.settings.low_inventory_text
+
+  assign show_progress_bar = block.settings.show_progress_bar
+  assign progress_bar_type = block.settings.progress_bar_type
+  assign progress_bar_max_value = block.settings.progress_bar_max_value
+-%}
+
+<div
+  data-product-block='{{ block.id }}'
+  style='display: block;'
+  id='product-stock-{{ product.id }}-{{ sectionId }}'
+  class='block-{{ block.id }}'
+  {{ block.shopify_attributes }}
+>
+  <div id='product-stock-inner-{{ product.id }}-{{ sectionId }}'>
+    {% render 'product-inventory',
+      current_variant: product.selected_or_first_available_variant,
+      show_inventory_status: show_inventory_status,
+      inventory_notice_type: inventory_notice_type,
+      inventory_threshhold: inventory_threshhold,
+      low_inventory_text: low_inventory_text,
+      high_inventory_text: high_inventory_text,
+      show_progress_bar: show_progress_bar,
+      progress_bar_type: progress_bar_type,
+      progress_bar_max_value: progress_bar_max_value
+    %}
+  </div>
+</div>

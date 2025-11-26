@@ -1,0 +1,305 @@
+{%- liquid
+  assign options = section.settings
+  assign add_desktop_side_paddings = options.add_desktop_side_paddings
+  assign add_mobile_side_paddings = options.add_mobile_side_paddings
+  assign section_spacing_top = options.section_spacing_top
+  assign section_spacing_bottom = options.section_spacing_bottom
+  assign color_scheme = settings.default_color_scheme
+  if options.color_scheme_variant == 'own'
+    assign color_scheme = options.color_scheme
+  endif
+  assign round_level = options.round_level
+-%}
+
+
+{%- liquid
+  assign show_background = section.settings.show_background
+  assign color_container_background = false
+
+  if show_background == false and settings.default_color_scheme.settings.background != color_scheme.settings.background
+    assign color_container_background = true
+  endif
+-%}
+
+{% capture css %}
+  {% style %}
+    .section-{{section.id}} {
+        --gsc-section-spacing-top: var(--gsc-padding-block-{{ section_spacing_top }});
+        --gsc-section-spacing-bottom: var(--gsc-padding-block-{{ section_spacing_bottom }});
+        --gsc-container-width: 40rem;
+    }
+  {% endstyle %}
+{% endcapture %}
+
+{% render 'inline-css-minifier', css: css %}
+
+<div class='login {% if round_level != 'default' %}round-level-{{round_level}}{% endif %} section section-{{ section.id }} color-{{ color_scheme }} spacing-block {% if add_mobile_side_paddings %}spacing-inline-mobile{% endif %} {% if add_desktop_side_paddings %}spacing-inline-desktop{% endif %} {% if color_container_background == false %}section-background{% endif %}'>
+  <div class='container {% if color_container_background %}container-background{% endif %}'>
+    <div class='login__content'>
+      <h2 class='login__title h5' tabindex='-1'>
+        {{ 'customer.activate_account.store_front.title' | t }}
+      </h2>
+      <div class='login__text body-font-weight-from-global-settings'>
+        {{ 'customer.activate_account.store_front.text' | t }}
+      </div>
+    </div>
+
+    {%- form 'activate_customer_password', class: 'login__form' -%}
+      <div class='field login__field'>
+        <label class='label' for='password'>
+          {{- 'customer.activate_account.store_front.label_for_password_input' | t -}}
+        </label>
+
+        <password-field class='password-input'>
+          <input
+            class='input input--{{ settings.input_style }} input--large password-input__input'
+            type='password'
+            name='customer[password]'
+            id='password'
+            autocomplete='new-password'
+            placeholder='{{ 'customer.activate_account.store_front.placeholder_for_password_input' | t }}'
+            data-password-field-input
+            autofocus
+            required
+          >
+          <button type='button' class='password-input__btn unstyled-button' data-password-field-button>
+            {% render 'icon',
+              icon_name: 'password-input-opened-eye',
+              class: 'password-input__icon password-input__icon--eye'
+            %}
+            {% render 'icon',
+              icon_name: 'password-input-closed-eye',
+              class: 'password-input__icon password-input__icon--closed-eye'
+            %}
+          </button>
+        </password-field>
+
+        {%- if form.errors contains 'password' -%}
+          {% assign error = form.errors.translated_fields.password
+            | capitalize
+            | append: form.errors.messages.password
+          %}
+          <script>
+            window.notification = { text: '{{ error }}', variant: 'warning' }
+          </script>
+        {%- endif -%}
+      </div>
+      <div class='field login__field'>
+        <label class='label' for='password_confirmation'>
+          {{- 'customer.activate_account.store_front.label_for_password_confirm_input' | t -}}
+        </label>
+
+        <password-field class='password-input'>
+          <input
+            class='input input--{{ settings.input_style }} input--large password-input__input'
+            type='password'
+            name='customer[password_confirmation]'
+            id='password_confirmation'
+            autocomplete='new-password'
+            placeholder='{{ 'customer.activate_account.store_front.placeholder_for_password_confirm_input' | t }}'
+            data-password-field-input
+            required
+          >
+          <button type='button' class='password-input__btn unstyled-button' data-password-field-button>
+            {% render 'icon',
+              icon_name: 'password-input-opened-eye',
+              class: 'password-input__icon password-input__icon--eye'
+            %}
+            {% render 'icon',
+              icon_name: 'password-input-closed-eye',
+              class: 'password-input__icon password-input__icon--closed-eye'
+            %}
+          </button>
+        </password-field>
+
+        {%- if form.errors contains 'password_confirmation' -%}
+          {% assign error = form.errors.translated_fields.password_confirmation
+            | capitalize
+            | append: form.errors.messages.password_confirmation
+          %}
+          <script>
+            window.notification = { text: '{{ error }}', variant: 'warning' }
+          </script>
+        {%- endif -%}
+      </div>
+      <div class='login__btns'>
+        <button
+          class='btn btn--primary btn--lg login__btn'
+          aria-label='{{ 'customer.activate_account.screen_reader.activate_button_label' | t }}'
+        >
+          {{ 'customer.activate_account.store_front.activate_button_label' | t }}
+        </button>
+      </div>
+      <div class='login__footer'>
+        <button
+          name='decline'
+          aria-label='{{ 'customer.activate_account.screen_reader.decline_invitation_button_label' | t }}'
+        >
+          {{ 'customer.activate_account.store_front.decline_invitation_button_label' | t }}
+        </button>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+{% render 'save-section-data-in-global-scope', section: section %}
+
+{% schema %}
+{
+  "name": "Activate page",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.general_section_settings.appearance.header_title"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_variant",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.default"
+        },
+        {
+          "value": "own",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.own"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.general_section_settings.color_scheme_variant.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "2",
+      "label": "t:sections.general_section_settings.color_scheme_label",
+      "visible_if": "{{ section.settings.color_scheme_variant == 'own' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_desktop_side_paddings",
+      "default": true,
+      "label": "t:sections.general_section_settings.paddings.add_side_paddings.desktop_label"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_mobile_side_paddings",
+      "default": true,
+      "label": "t:sections.general_section_settings.paddings.add_side_paddings.mobile_label"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.none"
+        },
+        {
+          "value": "xxxxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxxs"
+        },
+        {
+          "value": "xxxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxs"
+        },
+        {
+          "value": "xxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxs"
+        },
+        {
+          "value": "xs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xs"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.s"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.m"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.l"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xl"
+        },
+        {
+          "value": "xxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxl"
+        },
+        {
+          "value": "xxxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxl"
+        },
+        {
+          "value": "xxxxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxxl"
+        }
+      ],
+      "default": "l",
+      "label": "t:sections.general_section_settings.paddings.section_spacing_top.label"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.none"
+        },
+        {
+          "value": "xxxxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxxs"
+        },
+        {
+          "value": "xxxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxs"
+        },
+        {
+          "value": "xxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxs"
+        },
+        {
+          "value": "xs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xs"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.s"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.m"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.l"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xl"
+        },
+        {
+          "value": "xxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxl"
+        },
+        {
+          "value": "xxxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxl"
+        },
+        {
+          "value": "xxxxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxxl"
+        }
+      ],
+      "default": "l",
+      "label": "t:sections.general_section_settings.paddings.section_spacing_bottom.label"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,53 @@
+{
+  "sections": {
+    "page_404": {
+      "type": "page_404",
+      "settings": {
+        "desktop_media_type": "image",
+        "desktop_enable_overlay": false,
+        "desktop_overlay_opacity": 25,
+        "mobile_media_type": "image",
+        "mobile_enable_overlay": false,
+        "mobile_overlay_opacity": 25,
+        "caption": "",
+        "title": "Page not found",
+        "heading_size": "h0",
+        "text": "<p>Looks like the page you're looking for no longer exists. Try going back to the previous page or to the pages below.</p>",
+        "body_size": "body3",
+        "content_paddings_size": "xl",
+        "desktop_content_background": "none",
+        "desktop_outline_border_thickness": 1,
+        "desktop_background_opacity": 20,
+        "desktop_shadow_background_color": "#767676",
+        "mobile_content_background": "none",
+        "mobile_outline_border_thickness": 1,
+        "mobile_background_opacity": 20,
+        "mobile_shadow_background_color": "#767676",
+        "btn_text": "Go to home page",
+        "btn_style": "primary",
+        "extra_btn_text": "Return to products",
+        "extra_btn_style": "secondary",
+        "container_size": "full-screen",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "10",
+        "custom_text_color": "#ffffff",
+        "custom_first_button_text_color": "#ffffff",
+        "custom_first_button_bg_color": "#000000",
+        "custom_first_button_border_color": "#000000",
+        "custom_second_button_text_color": "#ffffff",
+        "custom_second_button_bg_color": "#000000",
+        "custom_second_button_border_color": "#000000",
+        "custom_link_color": "#ffffff",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xxxxl",
+        "section_spacing_bottom": "xxxxl"
+      }
+    }
+  },
+  "order": [
+    "page_404"
+  ]
+}

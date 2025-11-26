@@ -1,0 +1,91 @@
+{%- liquid
+  assign options = block.settings
+
+  assign content_alignment = options.content_alignment
+
+  assign heading = options.heading
+  assign body = options.body
+  assign body_size = options.body_size
+  assign heading_size = options.heading_size
+
+  assign icon_type = options.icon_type
+  assign icon_position = options.icon_position
+  assign icon = options.icon
+  assign custom_icon_image = options.custom_icon_image
+
+  assign enable_drawer = options.enable_drawer
+
+  assign is_to_render = false
+
+  if heading != blank or body != blank
+    if enable_drawer == true
+      if options.drawer_page != blank or options.drawer_image != blank or options.drawer_video != blank or options.drawer_text != blank
+        assign enable_drawer = true
+      else
+        assign enable_drawer = false
+      endif
+    endif
+
+    assign is_to_render = true
+  endif
+
+  assign tag_style = 'custom'
+  if options.tag_background_gradient == blank and options.tag_background_color == 'rgba(0,0,0,0)' and options.button_border_gradient == blank and options.button_border_color == 'rgba(0,0,0,0)'
+    assign tag_style = 'text'
+  endif
+-%}
+
+{% if is_to_render %}
+  {% capture tag_content %}
+    <div class="product-information-tag__content-wrapper {% if content_alignment == 'left' %} product-information-tag__content-wrapper--left-alignment {% elsif content_alignment == 'center' %} product-information-tag__content-wrapper--center-alignment {% endif %}">
+      {% if heading != blank or icon_type != 'none' %}
+        <div class="product-information-tag__heading {{ heading_size }} {% if icon_position == 'inline' %} product-information-tag__heading--inline {% elsif icon_position == 'top' %} product-information-tag__heading--column {% endif %}">
+          {% if icon_type != 'none' %}
+            <span class="product-information-tag__heading-icon-wrap {{ heading_size }}">
+              {%- if icon_type == 'custom' and custom_icon_image != blank -%}
+                <img
+                  {% render 'image-attributes', image: custom_icon_image, size: 'small', class: 'product-information-tag__heading-icon' %}
+                >
+              {%- elsif icon_type == 'preset' -%}
+                {% render 'icon-pack', icon: icon, class: 'product-information-tag__heading-icon' %}
+              {%- endif -%}
+            </span>
+          {% endif %}  
+          {% if heading != blank %}        
+            <span class="product-information-tag__heading-title {% if enable_drawer == true %} underline-animation-parent rte {% endif %}">
+              {{ heading }}
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if body != blank %}
+        <div class="product-information-tag__body rte {{ body_size }} {% if heading == blank and enable_drawer == true %} underline-animation-parent {% endif %}">{{ body }}</div>
+      {% endif %}
+    </div>
+  {% endcapture %}
+
+  <div
+    data-product-block='{{ block.id }}'
+    class='block-{{ block.id }} product-information-tag-block'
+    {{ block.shopify_attributes }}
+  >
+    {% if enable_drawer %}
+      <sidebar-button>
+        <button
+          class='unstyled-button product-information-tag {% if enable_drawer == true %} link-parent-for-hover {% endif %} {% if content_alignment == 'center' and icon_position == 'top' %} product-information-tag--icon-centered {% endif %} {% if content_alignment == 'left' %} product-information-tag--left-alignment {% elsif content_alignment == 'center' %} product-information-tag--center-alignment {% endif %} {% if tag_style == 'custom' %} product-information-tag--solid {% if options.button_border_gradient != blank %}product-button--gradient-border{% endif %}{% endif %}'
+          data-sidebar-id='product-information-sidebar-{{ block.id }}-{{ product.id }}-{{ sectionId }}'
+          aria-label='{{ btn_text | strip_html | escape }}'
+          data-sidebar-button
+          type='button'
+        >
+          {{ tag_content }}
+        </button>
+      </sidebar-button>
+    {% else %}
+      <div class='product-information-tag {% if content_alignment == 'center' and icon_position == 'top' %} product-information-tag--icon-centered {% endif %} {% if content_alignment == 'left' %} product-information-tag--left-alignment {% elsif content_alignment == 'center' %} product-information-tag--center-alignment {% endif %} {% if tag_style == 'custom' %} product-information-tag--solid {% if options.button_border_gradient != blank %}product-button--gradient-border{% endif %}{% endif %}'>
+        {{ tag_content }}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

@@ -1,0 +1,267 @@
+{% liquid
+  assign options = block.settings
+
+  assign round_level = options.round_level
+  assign desktop_width = options.desktop_width
+  assign heading = options.heading
+  assign heading_size = options.heading_size
+  assign subheading = options.subheading
+  assign body = options.body
+  assign body_size = options.body_size
+  assign disclaimer = options.disclaimer
+  assign content_alignment = options.content_alignment
+
+  assign page_condition = options.page_condition
+  assign show_condition = options.show_condition
+  assign pages = options.pages
+  assign product_tags = options.product_tags
+  assign show_condition = options.show_condition
+
+  assign verify_btn_label = options.verify_btn_label
+  assign verify_btn_style = options.verify_btn_style
+  assign exit_btn_label = options.exit_btn_label
+  assign exit_btn_style = options.exit_btn_style
+  assign exit_btn_url = options.exit_btn_url
+
+  assign media_type = options.media_type
+  if media_type == 'image'
+    assign img = options.img
+  endif
+  if media_type == 'video'
+    assign video = options.video
+  endif
+
+  assign img_position = options.img_position
+  assign hide_img_mobile = options.hide_img_mobile
+
+  assign storefront_overlay_solid = options.storefront_overlay_solid
+  assign storefront_overlay_gradient = options.storefront_overlay_gradient
+  assign content_blur = options.content_blur
+
+  assign has_image = false
+  if img != blank or video != blank
+    assign has_image = true
+  endif
+
+  assign has_btn = false
+  if verify_btn_label != blank or exit_btn_label != blank
+    assign has_btn = true
+  endif
+
+  assign one_btn = false
+  if has_btn == true and verify_btn_label == blank or has_btn == true and exit_btn_label == blank
+    assign one_btn = true
+  endif
+
+  assign enable_content_slide_in = settings.enable_content_slide_in
+%}
+
+{%- liquid
+  assign color_scheme = settings.default_color_scheme
+  if options.color_scheme_variant == 'own'
+    assign color_scheme = options.color_scheme
+  endif
+
+  assign background_color = color_scheme.settings.background
+  assign text_color = color_scheme.settings.text
+
+  if options.color_scheme_variant == 'custom'
+    assign background_color = block.settings.custom_background_color
+    assign text_color = block.settings.custom_text_color
+
+    assign verify_btn_style = 'primary'
+    if options.verify_btn_style == 'link'
+      assign verify_btn_style = 'link'
+    endif
+
+    assign exit_btn_style = 'secondary'
+    if options.exit_btn_style == 'link'
+      assign exit_btn_style = 'link'
+    endif
+  endif
+
+  assign enable_overlay = options.enable_overlay
+  assign overlay_opacity = options.overlay_opacity | divided_by: 100.00
+-%}
+
+{% capture css %}
+  {% style %}
+    .block-{{block.id}} {
+      --gsc-content-align: {{content_alignment}};
+      --gsc-desktop-width: {{desktop_width}}px;
+      
+      {% if options.color_scheme_variant == 'custom' %}
+        --gsc-primary-button-text-color: {{ block.settings.custom_first_button_text_color }};
+        --gsc-primary-button-bg-color: {{ block.settings.custom_first_button_bg_color }};
+        --gsc-primary-button-bg-color-rgb: {{ block.settings.custom_first_button_bg_color.red }}, {{ block.settings.custom_first_button_bg_color.green }}, {{ block.settings.custom_first_button_bg_color.blue }};
+        --gsc-primary-button-bg-hover: {% if block.settings.custom_first_button_bg_color.lightness < 50 %}{{ block.settings.custom_first_button_bg_color | color_lighten: 8 }}{% else %}{{ block.settings.custom_first_button_bg_color | color_darken: 8 }}{% endif %};
+        --gsc-primary-button-border-color: {% if block.settings.custom_first_button_border_color.alpha > 0 %}{{ block.settings.custom_first_button_border_color }}{% else %}transparent{% endif %};
+
+        --gsc-secondary-button-text-color: {{ block.settings.custom_second_button_text_color }};
+        --gsc-secondary-button-bg-color: {{ block.settings.custom_second_button_bg_color }};
+        --gsc-secondary-button-bg-color-rgb: {{ block.settings.custom_second_button_bg_color.red }}, {{ block.settings.custom_second_button_bg_color.green }}, {{ block.settings.custom_second_button_bg_color.blue }};
+        --gsc-secondary-button-bg-hover: {% if block.settings.custom_second_button_bg_color.lightness < 50 %}{{ block.settings.custom_second_button_bg_color | color_lighten: 8 }}{% else %}{{ block.settings.custom_second_button_bg_color | color_darken: 8 }}{% endif %};
+        --gsc-secondary-button-border-color: {% if block.settings.custom_second_button_border_color.alpha > 0 %}{{ block.settings.custom_second_button_border_color }}{% else %}transparent{% endif %};
+
+        --gsc-link-button-text-color: {{ block.settings.custom_link_color }};
+        
+        --gsc-background-color-100: {{ background_color }};
+        --gsc-text-color-100: {{ text_color }};
+        --gsc-text-color: {{ text_color.rgb | replace: ' ', ',' }};
+      {% endif %}
+
+      {% if enable_overlay %}
+        --gsc-overlay-color-rgb: {{ background_color.rgb | replace: ' ', ',' }};
+        --gsc-overlay-opacity: {{overlay_opacity}};
+      {% endif %} 
+    }
+  {% endstyle %}
+{% endcapture %}
+
+{% render 'inline-css-minifier', css: css %}
+
+<popup-age-verifier
+  class='popup popup-age-verifier block-{{block.id}} color-{{color_scheme}} {% if round_level != 'default' %}round-level-{{round_level}}{% endif %}'
+  id='Popups-AgeVerifier-{{ block.id }}'
+  data-block-id='{{block.id}}'
+  role='dialog'
+  aria-label='AgeVerifier Popup {{ heading }}'
+  aria-modal='true'
+  tabindex='-1'
+  data-ignore-esc-key
+  data-page-condition='{{page_condition}}'
+  data-show-condition='{{show_condition}}'
+  data-pages='{{pages}}'
+  data-product-tags='{{product_tags}}'
+  data-overlay-solid='{{storefront_overlay_solid}}'
+  data-overlay-gradient='{{storefront_overlay_gradient}}'
+  data-overlay-opacity='{{storefront_overlay_solid.alpha}}'
+  data-overlay-blur='{{ content_blur | divided_by: 2.0 }}'
+  data-has-image='{{has_image}}'
+  data-hide-img-mobile='{{hide_img_mobile}}'
+  data-skip-transition-wait
+  {{ block.shopify_attributes }}
+>
+  <template data-modal-template='Popups-AgeVerifier-{{ block.id }}'>
+    <div class='popup__body popup--with-image-on-{{img_position}}'>
+      {% if has_image %}
+        <div class='popup__media-container'>
+          {% render 'media-with-art-direction',
+            class: 'popup__media',
+            with_overlay: enable_overlay,
+            with_placeholder: false,
+            desktop_media_type: media_type,
+            mobile_media_type: media_type,
+            desktop_img: img,
+            mobile_img: img,
+            mobile_video: video,
+            desktop_video: video,
+            is_eager_loading: true
+          %}
+        </div>
+      {% endif %}
+      <div class='popup__content-container'>
+        <div class='popup__content'>
+          {% if subheading != blank %}
+            <div
+              class='caption popup__subheading {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+              {% if enable_content_slide_in %}
+                style='--gsc-animation-order: 1;'
+              {% endif %}
+            >
+              {{ subheading }}
+            </div>
+          {% endif %}
+          {% if heading != blank %}
+            <h2
+              class='{{heading_size}} popup__heading {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+              {% if enable_content_slide_in %}
+                style='--gsc-animation-order: 2;'
+              {% endif %}
+            >
+              {{ heading }}
+            </h2>
+          {% endif %}
+          {% if body != blank %}
+            <div
+              class='{{body_size}} popup__body-text body-font-weight-from-global-settings {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+              {% if enable_content_slide_in %}
+                style='--gsc-animation-order: 3;'
+              {% endif %}
+            >
+              {{ body }}
+            </div>
+          {% endif %}
+          {% if has_btn %}
+            <div
+              class='popup__btns-wrapper {% if one_btn %} popup__btns-wrapper--one-btn {% endif %} {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+              {% if enable_content_slide_in %}
+                style='--gsc-animation-order: 4;'
+              {% endif %}
+            >
+              <div class='popup__btns'>
+                {% if verify_btn_label != blank %}
+                  {% if verify_btn_style == 'link' %}
+                    <a
+                      class='link popup__btn-link'
+                      href='#'
+                      aria-label='{{verify_btn_label | strip_html | escape}}'
+                      data-verify-btn
+                    >
+                      <span class='link-parent-for-hover'>
+                        <span class='link__text'>{{ verify_btn_label }}</span>
+                      </span>
+                      {%- render 'icon', icon_name: 'link-chevron', class: 'link__chevron' -%}
+                    </a>
+                  {% else %}
+                    <a
+                      class='btn btn--{{ verify_btn_style }} popup__btn'
+                      aria-label='{{verify_btn_label | strip_html | escape}}'
+                      data-verify-btn
+                    >
+                      {{ verify_btn_label }}
+                    </a>
+                  {% endif %}
+                {% endif %}
+                {% if exit_btn_label != blank %}
+                  {% if exit_btn_style == 'link' %}
+                    <a
+                      class='link popup__btn-link'
+                      href='{% if exit_btn_url != blank %}{{exit_btn_url}}{% else %}https://google.com{% endif %}'
+                      aria-label='{{exit_btn_label | strip_html | escape}}'
+                      data-exit-btn
+                    >
+                      <span class='link-parent-for-hover'>
+                        <span class='link__text'>{{ exit_btn_label }}</span>
+                      </span>
+                      {%- render 'icon', icon_name: 'link-chevron', class: 'link__chevron' -%}
+                    </a>
+                  {% else %}
+                    <a
+                      class='btn btn--{{ exit_btn_style }} popup__btn'
+                      aria-label='{{exit_btn_label | strip_html | escape}}'
+                      href='{% if exit_btn_url != blank %}{{exit_btn_url}}{% else %}https://google.com{% endif %}'
+                      data-exit-btn
+                    >
+                      {{ exit_btn_label }}
+                    </a>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+          {% if disclaimer != blank %}
+            <div
+              class='popup__disclaimer {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+              {% if enable_content_slide_in %}
+                style='--gsc-animation-order: 5;'
+              {% endif %}
+            >
+              {{ disclaimer }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </template>
+</popup-age-verifier>

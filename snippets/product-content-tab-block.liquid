@@ -1,0 +1,131 @@
+{%- liquid
+  assign options = block.settings
+  assign block_style = options.style
+  assign title = options.title
+  assign heading_size = options.heading_size
+  assign body_size = options.body_size
+  assign text = options.text
+  assign page = options.page
+
+  assign icon_type = options.icon_type
+  assign custom_icon_image = options.custom_icon_image
+  assign icon = options.icon
+
+  assign media_type = options.media_type
+  assign image = options.image
+  assign video = options.video
+
+  assign is_to_render = false
+
+  if title != blank and text != blank or page != blank or image != blank or video != blank
+    assign is_to_render = true
+  endif
+-%}
+
+{% if is_to_render %}
+  {%- if block_style contains 'collapsible' -%}
+    <accordeon-component
+      data-product-block='{{ block.id }}'
+      class='accordeon-plus accordeon-plus--bottom-bordered accordeon-plus--top-bordered product-content-tab product-content-tab--collapsible-row block-{{ block.id }}'
+      data-aria-expanded='{% if block_style == 'collapsible_row_open' %}true{% else %}false{% endif %}'
+      {{ block.shopify_attributes }}
+    >
+      <accordeon-button class='product-content-tab__btn {{ heading_size }}' tabindex='0'>
+        {%- if icon_type == 'custom' and custom_icon_image != blank -%}
+          <img
+            {% render 'image-attributes', image: custom_icon_image, size: 'small', class: 'accordeon-plus__btn-icon' %}
+          >
+        {%- elsif icon_type == 'preset' -%}
+          {% render 'icon-pack', icon: icon, class: 'accordeon-plus__btn-icon' %}
+        {%- endif -%}
+        {{ title }}
+        {%- render 'icon', icon_name: 'plus', class: 'accordeon-plus__icon' -%}
+      </accordeon-button>
+      <div class='accordeon-plus__content-wrap body-font-weight-from-global-settings' data-accordeon-content-wrap>
+        <div class='accordeon-plus__content product-content-tab__content' data-accordeon-content>
+          {% if text != blank %}
+            <div class='rte product-content-tab__rte {{ body_size }} body-color'>{{ text }}</div>
+          {% endif %}
+
+          {% if page != blank %}
+            <div class='rte rte--page product-content-tab__rte {{ body_size }}'>
+              {{ page.content }}
+            </div>
+          {% endif %}
+
+          {%- if media_type == 'video' and video != blank -%}
+            {% render 'video-with-alt',
+              video: video,
+              class: 'product-content-tab__image',
+              autoplay: true,
+              loop: true,
+              muted: true,
+              controls: false,
+              is_eager_loading: true,
+              iterate_on_click: true
+            %}
+          {%- elsif media_type == 'image' and image != blank -%}
+            <img
+              {{ attrs }}
+              {% render 'image-attributes', image: image, size: 'medium', class: 'product-content-tab__image' %}
+            >
+          {%- endif -%}
+        </div>
+      </div>
+    </accordeon-component>
+  {%- else -%}
+    <div
+      data-product-block='{{ block.id }}'
+      class='product-content-tab block-{{ block.id }}'
+      {{ block.shopify_attributes }}
+    >
+      {% if title != blank %}
+        <div class='product-content-tab__title {{ heading_size }}'>
+          {%- if icon_type == 'custom' and custom_icon_image != blank -%}
+            <img
+              {% render 'image-attributes',
+                image: custom_icon_image,
+                size: 'small',
+                class: 'product-content-tab__title-icon'
+              %}
+            >
+          {%- elsif icon_type == 'preset' -%}
+            {% render 'icon-pack', icon: icon, class: 'product-content-tab__title-icon' %}
+          {%- endif -%}
+          {{ title }}
+        </div>
+      {% endif %}
+      {% if text != blank or image != blank or video != blank or page != blank %}
+        <div class='product-content-tab__content'>
+          {% if text != blank %}
+            <div class='rte product-content-tab__rte {{ body_size }} body-color'>{{ text }}</div>
+          {% endif %}
+
+          {% if page != blank %}
+            <div class='rte rte--page product-content-tab__rte {{ body_size }}'>
+              {{ page.content }}
+            </div>
+          {% endif %}
+
+          {%- if media_type == 'video' and video != blank -%}
+            {% render 'video-with-alt',
+              video: video,
+              class: 'product-content-tab__image',
+              autoplay: true,
+              loop: true,
+              muted: true,
+              controls: false,
+              loading: 'lazy',
+              iterate_on_click: true
+            %}
+          {%- elsif media_type == 'image' and image != blank -%}
+            <img
+              {{ attrs }}
+              {% render 'image-attributes', image: image, size: 'medium', class: 'product-content-tab__image' %}
+            >
+          {%- endif -%}
+        </div>
+      {% endif %}
+    </div>
+  {%- endif -%}
+{% endif %}

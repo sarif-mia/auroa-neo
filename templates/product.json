@@ -1,0 +1,484 @@
+{
+  "sections": {
+    "main": {
+      "type": "product",
+      "blocks": {
+        "vendor": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "heading_size": "h3"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "price_size": "sm",
+            "show_currency_code": false,
+            "show_compared_at_price": true,
+            "show_tax_status": false,
+            "show_sale_amount_badge": true,
+            "highlight_sale_price": true
+          }
+        },
+        "collapsible_row": {
+          "type": "collapsible_row",
+          "settings": {
+            "style": "static",
+            "title": "",
+            "heading_size": "caption3",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24,
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "option_type": "button-solid",
+            "show_swatches": true,
+            "primary_swatch_option_type": "variant-images",
+            "secondary_swatch_option_type": "swatches",
+            "hide_single_value_options": true,
+            "option_name": "Size",
+            "information_drawer_button_label": "SIZE GUIDE",
+            "information_drawer_button_position": "left",
+            "information_drawer_icon_type": "none",
+            "information_drawer_button_icon": "settings",
+            "text": "",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 60
+          }
+        },
+        "inventory_status": {
+          "type": "inventory_status",
+          "settings": {
+            "show_inventory_status": "always",
+            "inventory_threshhold": 5,
+            "inventory_notice_type": "label",
+            "high_inventory_text": "Many in stock",
+            "low_inventory_text": "Act now, few in stock!",
+            "show_progress_bar": true,
+            "progress_bar_type": "solid",
+            "progress_bar_size": "6",
+            "progress_bar_max_value": "2500",
+            "high_inventory_label_color": "#000000",
+            "high_inventory_color": "#97e823",
+            "high_inventory_gradient": "",
+            "high_inventory_progress_bar_bg": "#f3f1e7",
+            "low_inventory_label_color": "#000000",
+            "low_inventory_color": "#ff3d3d",
+            "low_inventory_gradient": "",
+            "low_inventory_progress_bar_bg": "#f5f5f5"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "enable_pickup_availability": true,
+            "enable_gift_card": false,
+            "show_payment_icons": false,
+            "show_sticky_buy_button": "mobile-only",
+            "buttons_size": "md",
+            "add_to_cart_btn_style": "primary",
+            "checkout_btn_style": "secondary"
+          }
+        },
+        "8f7af4e6-5f36-4f3d-9d6a-936950e206f5": {
+          "type": "information_tag",
+          "settings": {
+            "heading": "We are eco-friendly",
+            "heading_size": "h6",
+            "body": "<p>We care for our customers, but we also care a lot about our planet. That's why we partner only with factories with eco-friendly manufacturing.</p>",
+            "body_size": "body3",
+            "content_alignment": "left",
+            "tag_background_color": "#f2efe3",
+            "tag_background_gradient": "",
+            "button_border_color": "rgba(0,0,0,0)",
+            "button_border_gradient": "",
+            "tag_text_color": "#3b3933",
+            "icon_type": "none",
+            "icon": "eco",
+            "icon_size": 24,
+            "icon_position": "inline",
+            "enable_drawer": true,
+            "drawer_text": "",
+            "drawer_body_size": "body3",
+            "drawer_media_type": "image",
+            "drawer_media_size": 60
+          }
+        },
+        "9b5dffd0-7e18-4103-9862-407ea4cb64d6": {
+          "type": "related_products",
+          "settings": {
+            "product_recommendations_type": "auto",
+            "block_layout": "carousel-with-vertical-cards",
+            "products_to_show": 10,
+            "desktop_space_between_cards": 11,
+            "mobile_space_between_cards": 32,
+            "show_in_quick_view": false,
+            "title": "You may also like",
+            "heading_size": "h6",
+            "alignment": "left",
+            "img_ratio": "inherited",
+            "img_ratio_resize": "fill",
+            "content_alignment": "left",
+            "hide_product_prices": false,
+            "autoplay_mode": "disabled",
+            "autoplay_interval": 3,
+            "show_navigation_on_hover": true,
+            "color_scheme_variant": "default",
+            "color_scheme": "secondary",
+            "enable_color_background": true,
+            "cards_color_background": false
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "collapsible_row",
+        "variant_picker",
+        "inventory_status",
+        "quantity_selector",
+        "buy_buttons",
+        "8f7af4e6-5f36-4f3d-9d6a-936950e206f5",
+        "9b5dffd0-7e18-4103-9862-407ea4cb64d6"
+      ],
+      "settings": {
+        "media_to_content_ratio": "fixed",
+        "img_ratio": "portrait",
+        "img_ratio_resize": "fill",
+        "layout": "212-column",
+        "thumbnails_size": 96,
+        "mobile_layout": "slideshow-linear",
+        "navigation_dots_style": "white_with_bg",
+        "space_between_cards": "s",
+        "show_only_selected_variants": false,
+        "enable_image_zoom": true,
+        "enable_video_autoplay": false,
+        "enable_video_controls": false,
+        "enable_video_looping": false,
+        "scale_video": true,
+        "container_size": "page-width",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xxs",
+        "section_spacing_bottom": "l"
+      }
+    },
+    "product-details": {
+      "type": "product-details",
+      "blocks": {
+        "collapsible_row_2": {
+          "type": "collapsible_row",
+          "settings": {
+            "title": "Returns & Exchanges",
+            "heading_size": "caption1",
+            "icon_type": "none",
+            "icon": "easy-returns",
+            "icon_size": 24,
+            "text": "",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "8e30557b-8c40-46d1-9097-92b55b215014": {
+          "type": "collapsible_row",
+          "settings": {
+            "title": "Find your size",
+            "heading_size": "caption1",
+            "icon_type": "none",
+            "icon": "routing",
+            "icon_size": 24,
+            "text": "",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "collapsible_row_3": {
+          "type": "collapsible_row",
+          "settings": {
+            "title": "Fabric care rules",
+            "heading_size": "caption1",
+            "icon_type": "none",
+            "icon": "list",
+            "icon_size": 24,
+            "text": "<p>Here are a few guidelines to help you care for your new purchase. It's a good idea to pre-wash any washable natural fibers that you will be washing in the future, as some shrinkage may happen. We recommend pre-washing in the same way you intend to wash your future fabric creation including drying.<br/><br/>Wash light and bright colors separately, as some colors may run in their first few washes. Please note, these care tips are guidelines only and variations will apply to some fabrics. Extra care should be taken when washing high contrast prints with highly saturated pigments like red, black and navy on a light-colored cloths. These prints can be prone to color bleed and should be cold washed, and dried without delay.<br/><br/>Special washing instructions will apply to some fabrics such as satins, sequined, beaded, coated or foiled fabrics as well as specialty weights/styles and delicate items. If you have any questions, please do not hesitate to contact us.<br/><br/>Please follow the care & prewash guidelines as we are unable to accept claims on fabrics which have been laundered incorrectly.<br/></p>",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "collapsible_row_1": {
+          "type": "collapsible_row",
+          "settings": {
+            "title": "Shipping",
+            "heading_size": "caption1",
+            "icon_type": "none",
+            "icon": "shipping-box",
+            "icon_size": 24,
+            "text": "",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_2",
+        "8e30557b-8c40-46d1-9097-92b55b215014",
+        "collapsible_row_3",
+        "collapsible_row_1"
+      ],
+      "settings": {
+        "style": "collapsible-rows",
+        "expand_first_collapsible_row": false,
+        "container_size": "large",
+        "round_level": "default",
+        "color_scheme_variant": "own",
+        "color_scheme": "1",
+        "show_background": false,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xxxl",
+        "section_spacing_bottom": "xxxl"
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "product_recommendations_type": "auto",
+        "desktop_layout": "carousel",
+        "mobile_layout": "carousel",
+        "cards_to_show": 18,
+        "desktop_columns": 4,
+        "mobile_columns": "2",
+        "space_between_cards": "s",
+        "space_between_cards_mobile": "l",
+        "title": "You may also like",
+        "heading_size": "h3",
+        "alignment": "center",
+        "img_ratio": "portrait",
+        "img_ratio_resize": "fill",
+        "product_card_align": "left",
+        "autoplay_mode": "disabled",
+        "autoplay_interval": 3,
+        "show_navigation_on_hover": true,
+        "container_size": "page-width",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "m",
+        "section_spacing_bottom": "m"
+      }
+    },
+    "9f42f16b-e5e7-419f-ace4-a63e4d10a5be": {
+      "type": "images-with-text",
+      "blocks": {
+        "template--16342959587569__9f42f16b-e5e7-419f-ace4-a63e4d10a5be-1684504550cc6e64b5-0": {
+          "type": "image",
+          "settings": {
+            "media_type": "image"
+          }
+        },
+        "template--16342959587569__9f42f16b-e5e7-419f-ace4-a63e4d10a5be-1684504550cc6e64b5-1": {
+          "type": "image",
+          "settings": {
+            "media_type": "image"
+          }
+        },
+        "template--16342959587569__9f42f16b-e5e7-419f-ace4-a63e4d10a5be-1684504550cc6e64b5-2": {
+          "type": "image",
+          "settings": {
+            "media_type": "image"
+          }
+        },
+        "template--16342959587569__9f42f16b-e5e7-419f-ace4-a63e4d10a5be-1684504550cc6e64b5-3": {
+          "type": "image",
+          "settings": {
+            "media_type": "image"
+          }
+        }
+      },
+      "block_order": [
+        "template--16342959587569__9f42f16b-e5e7-419f-ace4-a63e4d10a5be-1684504550cc6e64b5-0",
+        "template--16342959587569__9f42f16b-e5e7-419f-ace4-a63e4d10a5be-1684504550cc6e64b5-1",
+        "template--16342959587569__9f42f16b-e5e7-419f-ace4-a63e4d10a5be-1684504550cc6e64b5-2",
+        "template--16342959587569__9f42f16b-e5e7-419f-ace4-a63e4d10a5be-1684504550cc6e64b5-3"
+      ],
+      "settings": {
+        "content_layout": "left",
+        "image_layout": "collage",
+        "img_ratio": 1.3,
+        "rotate_images": false,
+        "icon_type": "none",
+        "icon": "none",
+        "subheading": "NEW DAY - NEW YOU",
+        "heading": "Popular styles for every season",
+        "heading_size": "h2",
+        "body": "<p>We will take over your social media feeds with killer looks and next-level aesthetic. Be the center of attention regardless of the season.</p>",
+        "body_size": "body3",
+        "content_alignment": "left",
+        "content_paddings_size": "xl",
+        "first_button_text": "Shop now",
+        "first_button_style": "solid",
+        "second_button_text": "",
+        "second_button_link": "",
+        "second_button_style": "solid",
+        "container_size": "large",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xxl",
+        "section_spacing_bottom": "xxl"
+      }
+    },
+    "collection_list": {
+      "type": "collection-list",
+      "settings": {
+        "desktop_layout": "carousel",
+        "mobile_layout": "carousel",
+        "desktop_columns": 3,
+        "mobile_columns": "2",
+        "space_between_cards": "s",
+        "space_between_cards_mobile": "l",
+        "title": "Always in focus",
+        "heading_size": "h5",
+        "alignment": "center",
+        "img_ratio": "square",
+        "text_style": "over-image",
+        "collection_card_heading_size": "h6",
+        "show_product_count": "caption",
+        "collection_card_content_align": "center",
+        "cards_color_scheme_variant": "default",
+        "cards_color_scheme": "",
+        "cards_title_color": "#ffffff",
+        "cards_overlay_color": "#000000",
+        "cards_overlay_opacity": 25,
+        "autoplay_mode": "disabled",
+        "autoplay_interval": 3,
+        "show_navigation_on_hover": true,
+        "container_size": "page-width",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "m",
+        "section_spacing_bottom": "m"
+      }
+    },
+    "multicolumn": {
+      "type": "multicolumn",
+      "blocks": {
+        "f482ccb7-cfe0-4aa6-84e7-a04b1596a7ed": {
+          "type": "column_with_icon",
+          "settings": {
+            "icon_type": "preset",
+            "icon": "discount-outline",
+            "icon_size": 52,
+            "title": "FREE SHIPPING",
+            "text": "<p>We provide free and fast worldwide delivery via Express Shipping on orders above $150</p>",
+            "link_text": "",
+            "btn_style": "link"
+          }
+        },
+        "3d89f66b-4141-401f-91d2-de01817a8d3f": {
+          "type": "column_with_icon",
+          "settings": {
+            "icon_type": "preset",
+            "icon": "discount-outline",
+            "icon_size": 52,
+            "title": "EASY RETURNS & EXCHANGES",
+            "text": "<p>Should you change your mind we will happily exchange or refund within 30 days of purchase</p>",
+            "link_text": "",
+            "btn_style": "link"
+          }
+        },
+        "ab88d7a4-d89e-4607-b1eb-07770d91c3f0": {
+          "type": "column_with_icon",
+          "settings": {
+            "icon_type": "preset",
+            "icon": "discount-outline",
+            "icon_size": 52,
+            "title": "24/7 SUPPORT",
+            "text": "<p>Should you have questions about delivery, returns, and technical issues, we are always here to help</p>",
+            "link_text": "",
+            "btn_style": "link"
+          }
+        }
+      },
+      "block_order": [
+        "f482ccb7-cfe0-4aa6-84e7-a04b1596a7ed",
+        "3d89f66b-4141-401f-91d2-de01817a8d3f",
+        "ab88d7a4-d89e-4607-b1eb-07770d91c3f0"
+      ],
+      "settings": {
+        "desktop_layout": "grid",
+        "mobile_layout": "one-column-grid",
+        "desktop_columns": 3,
+        "space_between_cards": "m",
+        "space_between_cards_mobile": "m",
+        "title": "",
+        "heading_size": "h7",
+        "text": "",
+        "body_size": "body4",
+        "content_alignment": "center",
+        "column_heading_size": "h7",
+        "column_body_size": "body4",
+        "column_alignment": "center",
+        "content_spacing": "m",
+        "show_column_background": false,
+        "btn_text": "",
+        "btn_style": "outline",
+        "autoplay_mode": "disabled",
+        "autoplay_interval": 3,
+        "show_navigation_on_hover": true,
+        "container_size": "page-width",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "m",
+        "section_spacing_bottom": "xxxxl"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "product-details",
+    "product-recommendations",
+    "9f42f16b-e5e7-419f-ace4-a63e4d10a5be",
+    "collection_list",
+    "multicolumn"
+  ]
+}

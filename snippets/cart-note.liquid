@@ -1,0 +1,43 @@
+{% liquid
+  # Props
+  assign id = id | default: null
+  assign class = class | default: ''
+  assign note = note | default: ''
+  assign attributes = attributes | default: null
+  assign show_apply_button = show_apply_button | default: false
+%}
+
+<cart-note
+  {% if id %}
+    id='{{ id }}'
+  {% endif %}
+  class='cart-note {{ class }}'
+  {% if attributes %}
+    {{ attributes }}
+  {% endif %}
+>
+  <div class='cart-note__title'>
+    {{ 'general.cart_note.store_front.title' | t }}
+  </div>
+
+  <div class='field'>
+    <textarea
+      class='cart-note__textarea textarea textarea--solid'
+      placeholder='{{ 'general.cart_note.store_front.note_for_seller' | t }}'
+    >
+      {{- note -}}
+    </textarea>
+  </div>
+
+  {% if show_apply_button %}
+    <button
+      type='text'
+      class='cart-note__apply-button btn btn--primary btn--solid btn--lg'
+      aria-label='{{ 'general.cart_note.screen_reader.apply' | t }}'
+    >
+      <span>
+        {{ 'general.cart_note.store_front.apply' | t }}
+      </span>
+    </button>
+  {% endif %}
+</cart-note>

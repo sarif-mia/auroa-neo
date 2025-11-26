@@ -1,0 +1,6 @@
+{% assign select = select | default: '' %}
+
+<custom-select class='custom-select'>
+  {{ select }}
+  {% render 'icon', icon_name: 'arrow-down', class: 'custom-select__arrow' %}
+</custom-select>

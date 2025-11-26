@@ -1,0 +1,21 @@
+{% liquid
+  assign id = id | default: 'qwer_id'
+  assign class = class | default: ''
+  assign text = text | default: ''
+%}
+
+<div class='consent-checkbox field {{ class }}'>
+  <label
+    class='checkbox checkbox--consent body-font-weight-from-global-settings'
+    for='{{ id }}'
+  >
+    <input
+      class='checkbox__input'
+      id='{{ id }}'
+      type='checkbox'
+      required
+    >
+    <span class='checkbox__span checkbox__span--outline checkbox__span--{{ input_style }}'></span>
+    <span>{{ text }}</span>
+  </label>
+</div>

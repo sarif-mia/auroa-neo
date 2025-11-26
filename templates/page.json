@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "page": {
+      "type": "page",
+      "settings": {
+        "show_heading": true,
+        "container_size": "xsmall",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xxxl",
+        "section_spacing_bottom": "xxxl"
+      }
+    }
+  },
+  "order": [
+    "page"
+  ]
+}

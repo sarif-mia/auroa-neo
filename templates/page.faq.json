@@ -1,0 +1,219 @@
+{
+  "sections": {
+    "page": {
+      "type": "page",
+      "disabled": true,
+      "settings": {
+        "show_heading": true,
+        "container_size": "large",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "s",
+        "section_spacing_bottom": "s"
+      }
+    },
+    "questions": {
+      "type": "faq",
+      "blocks": {
+        "category1": {
+          "type": "category",
+          "settings": {
+            "title": "Product & Stock",
+            "category_heading_size": "h6",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24
+          }
+        },
+        "question1": {
+          "type": "question",
+          "settings": {
+            "title": "Do products come in exactly the same color?",
+            "heading_size": "caption2",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24,
+            "text": "<p>All colours of garments are reproduced as accurately as possible, however a slight variation may occur in colour and size specifications. Colours may appear slightly different via this web site due to computer picture resolution and individual monitor settings.</p>",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "question2": {
+          "type": "question",
+          "settings": {
+            "title": "What if the item I ordered is sold out?",
+            "heading_size": "caption2",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24,
+            "text": "<p>All orders are subject to stock availability. Should an item be sold out, we will contact you via phone or email and refund the money paid for the item to the original method of payment.</p>",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "question3": {
+          "type": "question",
+          "settings": {
+            "title": "When are sold-outs back in stock?",
+            "heading_size": "caption2",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24,
+            "text": "<p>Revella The Label collections are produced with limited stock and can sell out quickly. Once they have sold out, they are unlikely to be back in stock again.</p>",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "category2": {
+          "type": "category",
+          "settings": {
+            "title": "Orders & Payments",
+            "category_heading_size": "h6",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24
+          }
+        },
+        "question4": {
+          "type": "question",
+          "settings": {
+            "title": "How can I pay for my order?",
+            "heading_size": "caption2",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24,
+            "text": "<p>We accept the following payment methods:</p>",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 50
+          }
+        },
+        "question5": {
+          "type": "question",
+          "settings": {
+            "title": "Will I receive order confirmation?",
+            "heading_size": "caption2",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24,
+            "text": "<p>Once you have placed an order you will shortly receive a confirmation email. Please check your Junk/Spam folder. If you have not received your order confirmation email please contact the customer support via the website.</p>",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "question6": {
+          "type": "question",
+          "settings": {
+            "title": "How do I know you've received my order?",
+            "heading_size": "caption2",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24,
+            "text": "<p>Once you've placed your order, you will be directed to an order confirmation message which will contain your order number. This information will also be emailed to you; this can take up to 60 minutes to arrive in your inbox- so hold tight! Once our team at the warehouse have processed your order, you will receive a second email to let you know that your order is on its way to you.</p>",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "question7": {
+          "type": "question",
+          "settings": {
+            "title": "What if I haven't received part of my order?",
+            "heading_size": "caption2",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24,
+            "text": "<p>If you are missing part of your order, please check:</p><p>1.  Your dispatch email, if your order is going to be sent in multiple parts then your dispatch email will only include some of the items you ordered, you will then get another dispatch email. You will also receive multiple tracking numbers.</p><p>2.  The receipt/invoice in the bag, this will show the items you should have received in this parcel. If you have everything that is on the invoice the rest of your order will come separately.</p><p>3.  If your order is arriving in multiple parcels then there will be a sticker on the bag to let you know the order has been split.</p>",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "category3": {
+          "type": "category",
+          "settings": {
+            "title": "Returns & refunds",
+            "category_heading_size": "h6",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24
+          }
+        },
+        "question8": {
+          "type": "question",
+          "settings": {
+            "title": "How can I return my online purchase?",
+            "heading_size": "caption2",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24,
+            "text": "<p>Simply post it to us. Please contact customer service for return address. </p><p>Make sure your order number, name, address, email, phone number and instructions are included and any comments.</p><p>All returns remain the responsibility of the purchaser until received by Revella The Label.</p><p>In either case, you must present the receipt you received in your parcel & indicate the reason for the return or exchange.</p>",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        },
+        "question9": {
+          "type": "question",
+          "settings": {
+            "title": "How do you make refunds?",
+            "heading_size": "caption2",
+            "icon_type": "none",
+            "icon": "none",
+            "icon_size": 24,
+            "text": "<p>We process refunds using the original form of payment.</p><p>Please note that delivery costs will be excluded from the refund unless goods are returned in accordance with your statutory rights (e.g. they are faulty or not as ordered).</p>",
+            "body_size": "body3",
+            "media_type": "image",
+            "image_width": 100
+          }
+        }
+      },
+      "block_order": [
+        "category1",
+        "question1",
+        "question2",
+        "question3",
+        "category2",
+        "question4",
+        "question5",
+        "question6",
+        "question7",
+        "category3",
+        "question8",
+        "question9"
+      ],
+      "settings": {
+        "section_layout": "bottom-tabs",
+        "color_tabs": "content_tabs_separately",
+        "expand_first_tab": false,
+        "title": "FAQ's",
+        "heading_size": "h3",
+        "body_size": "body3",
+        "content_alignment": "center",
+        "btn_text": "",
+        "btn_style": "primary",
+        "container_size": "xsmall",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xxxl",
+        "section_spacing_bottom": "xxxxl"
+      }
+    }
+  },
+  "order": [
+    "page",
+    "questions"
+  ]
+}

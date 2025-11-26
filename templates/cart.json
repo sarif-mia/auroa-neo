@@ -1,0 +1,105 @@
+{
+  "sections": {
+    "cart": {
+      "type": "cart",
+      "blocks": {
+        "items": {
+          "type": "items",
+          "settings": {}
+        },
+        "subtotal": {
+          "type": "subtotal",
+          "settings": {
+            "background_style": "solid",
+            "show_taxes_and_shipping_costs": true,
+            "show_currency_code": true,
+            "show_payment_icons": true,
+            "show_subtotal_order_note": true,
+            "show_discount_code": true,
+            "show_subtotal_shipping_calculator": true,
+            "show_subtotal_buttons": true,
+            "checkout_button_style": "primary",
+            "show_subtotal_dynamic_buttons": false
+          }
+        },
+        "17969969-365d-4904-ac70-e9fc2a402891": {
+          "type": "countdown",
+          "settings": {
+            "hide_for_empty_cart": true,
+            "mode": "evergreen",
+            "year": "2024",
+            "month": "january",
+            "day": "1",
+            "hour": "0",
+            "minute": "0",
+            "hide_on_complete": true,
+            "evergreen_unit": "hour",
+            "evergreen_value": 24,
+            "evergreen_on_complete": "restart",
+            "timer_desktop_width": 54,
+            "background_type": "hide",
+            "background_style": "solid",
+            "outline_background_border_thickness": 1,
+            "enable_separators": true,
+            "captitalize_unit_labels": true,
+            "heading": "Sale ends soon!",
+            "heading_size": "h4",
+            "body": "Shop now and get amazing deals on your favorite styles",
+            "body_size": "body3",
+            "discount_code": "REVELLA505",
+            "content_alignment": "center",
+            "color_scheme_variant": "own",
+            "color_scheme": "5",
+            "show_background": true
+          }
+        },
+        "2bcfb89d-d6dd-4c35-b1f8-7120c5e7d5d5": {
+          "type": "in_cart_related",
+          "settings": {
+            "recommendations_type": "auto",
+            "cards_to_show": 10,
+            "space_between_cards": "s",
+            "space_between_cards_mobile": "m",
+            "hide_for_empty_cart": true,
+            "heading": "You may also like",
+            "heading_size": "h4",
+            "heading_alignment": "left",
+            "img_ratio": "inherited",
+            "img_ratio_resize": "fill",
+            "content_alignment": "left",
+            "hide_product_prices": false,
+            "autoplay_mode": "disabled",
+            "autoplay_interval": 3,
+            "show_arrows_on_hover": true,
+            "color_scheme_variant": "default",
+            "color_scheme": "default",
+            "enable_color_background": false,
+            "cards_color_background": false
+          }
+        }
+      },
+      "block_order": [
+        "items",
+        "subtotal",
+        "17969969-365d-4904-ac70-e9fc2a402891",
+        "2bcfb89d-d6dd-4c35-b1f8-7120c5e7d5d5"
+      ],
+      "settings": {
+        "cart_layout": "on_side",
+        "img_ratio": "default",
+        "img_ratio_resize": "fill",
+        "container_size": "large",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": false,
+        "add_desktop_side_paddings": true,
+        "section_spacing_top": "l",
+        "section_spacing_bottom": "l"
+      }
+    }
+  },
+  "order": [
+    "cart"
+  ]
+}

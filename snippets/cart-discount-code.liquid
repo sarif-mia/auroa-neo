@@ -1,0 +1,56 @@
+{% liquid
+  assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
+  assign discount_codes = discount_codes | uniq
+%}
+
+<cart-discount-code class='cart-discount-code {{ class }}'>
+  <div class='cart-discount-code__title'>
+    {{ 'general.subtotal.store_front.discount_code' | t }}
+  </div>
+
+  <form class='cart-discount-code__form' data-cart-discount-code-form>
+    <input
+      id='DiscountCode'
+      class='input input--large input--solid'
+      type='text'
+      placeholder='{{ 'general.subtotal.store_front.add_discount_code' | t }}'
+      data-cart-discount-code-input
+      required
+    >
+
+    <button
+      type='submit'
+      class='btn btn--primary btn--solid btn--lg'
+      aria-label='{{ 'general.cart_note.screen_reader.apply' | t }}'
+      data-cart-discount-code-button
+    >
+      <span>{{ 'general.cart_note.screen_reader.apply' | t }}</span>
+      <div class='loading-spinner btn__loading-spinner'></div>
+    </button>
+  </form>
+
+  <p class='cart-discount-code__error hidden' data-cart-discount-error>
+    {{ 'general.discount_code.store_front.error_title' | t }}
+  </p>
+
+  <ul class='cart-discount-code__applied-codes {% if discount_codes.size == 0 %}hidden{% endif %} '>
+    {% for discount_code in discount_codes %}
+      <li
+        class='cart-discount-code__applied-code'
+        data-discount-code='{{ discount_code }}'
+      >
+        {% render 'icon', icon_name: 'discount-label' %}
+
+        {{ discount_code }}
+
+        <button
+          type='button'
+          class='cart-discount-code__applied-code-remove unstyled-button '
+          data-remove-discount='{{ discount_code }}'
+        >
+          {% render 'icon', icon_name: 'close-medium-normal' %}
+        </button>
+      </li>
+    {% endfor %}
+  </ul>
+</cart-discount-code>

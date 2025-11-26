@@ -1,0 +1,157 @@
+{% liquid
+  assign timer_id = timer_id | default: block.id
+  assign color_scheme = section_color_scheme | default: options.color_scheme
+
+  assign options = block.settings
+  if options.color_scheme_variant == 'own'
+    assign color_scheme = options.color_scheme
+  endif
+
+  assign background_type = options.background_type
+  assign enable_separators = options.enable_separators
+  assign captitalize_unit_labels = options.captitalize_unit_labels
+  assign hide_on_complete = options.hide_on_complete
+  assign mode = options.mode
+  assign evergreen_unit = options.evergreen_unit
+  assign evergreen_value = options.evergreen_value
+  assign evergreen_on_complete = options.evergreen_on_complete
+  assign year = options.year
+  assign month = options.month
+  assign day = options.day
+  assign hour = options.hour
+  assign minute = options.minute
+  assign desktop_width = options.timer_desktop_width
+
+  assign background_style = options.background_style
+  assign outline_background_border_thickness = options.outline_background_border_thickness
+  if background_style != 'outline'
+    assign outline_background_border_thickness = 0
+  endif
+  assign background_opacity = options.background_opacity
+  assign blurred_background_blur = options.blurred_background_blur
+
+  assign enable_content_slide_in = settings.enable_content_slide_in
+%}
+
+{% capture css %}
+  {% style %}
+    .timer__block-{{ block.id }}-{{ timer_id }} {
+      {% if ensure_width %}
+        --gsc-timer-width: 100%;
+      {% endif %}
+
+      {% if background_style == 'outline' %}
+        --gsc-timer-border-width: {{ outline_background_border_thickness }}px;
+      {% endif %}
+
+      {% if background_style == 'blurred' %}
+        --gsc-timer-background-rgb: {{ color_scheme.settings.background.rgb | replace: ' ', ',' }};
+        --gsc-timer-background-opacity: {{ background_opacity }}%;
+        --gsc-timer-blur: {{ blurred_background_blur }}px;
+      {% endif %}
+      
+      {% if background_style == 'transparent' %}
+        --gsc-timer-background-rgb: {{ color_scheme.settings.background.rgb | replace: ' ', ',' }};
+        --gsc-timer-background-opacity: {{ background_opacity }}%;
+      {% endif %}
+    }
+
+    @media {% render 'media-queries', screen: 'md' %} {
+      .timer__block-{{ block.id }}-{{ timer_id }} {
+        {% if ensure_width %}
+          --gsc-timer-width: 100%;
+        {% else %}
+          --gsc-timer-width: {{ desktop_width }}%;
+        {% endif %}
+      }
+    }
+  {% endstyle %}
+{% endcapture %}
+
+{% render 'inline-css-minifier', css: css %}
+
+{% capture separator %}
+  {% if enable_separators %}
+    <div class="timer__separator"></div>
+  {% endif %}  
+{% endcapture %}
+
+<countdown-timer
+  class='timer__container {% if options.color_scheme_variant != 'custom' %}color-{{color_scheme}}{% endif %} timer__block-{{ block.id }}-{{ timer_id }} hidden'
+  id='{{timer_id}}'
+  data-block-id='{{block.id}}'
+  data-section-id='{{section_id}}'
+  data-mode='{{mode}}'
+  data-year='{{year}}'
+  data-month='{{month}}'
+  data-day='{{day}}'
+  data-hour='{{hour}}'
+  data-minute='{{minute}}'
+  data-evergreen-unit='{{evergreen_unit}}'
+  data-evergreen-value='{{evergreen_value}}'
+  data-evergreen-on-complete='{{evergreen_on_complete}}'
+  data-hide-on-complete='{{hide_on_complete}}'
+  {{ attrs }}
+>
+  <svg
+    class='timer__svg'
+    height='100%'
+    viewBox='0 0 500 {% if enable_separators %}{{110 | plus: outline_background_border_thickness}}{% else %}{{120 | plus: outline_background_border_thickness}}{% endif %}'
+    preserveAspectRatio='xMinYMin meet'
+  >
+    <foreignObject width="99.9%" height="100%" xmlns="http://www.w3.org/1999/xhtml">
+      <div class='timer__wrapper timer--with-background-{{background_type}} timer--with-background-{{background_type}}-and-{{background_style}} {% if enable_separators %} timer--with-colon {% endif %}'>
+
+        <div class='timer__unit {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+          {% if enable_content_slide_in %}
+            style='--gsc-animation-order: 1;'
+          {% endif %}
+        >
+          <div class='timer__unit-value' data-timer-days>00</div>
+            <div class='timer__unit-label {% if captitalize_unit_labels %} timer--capitalize {% endif %}' data-timer-days-label>
+              {{ 'countdown_timer.store_front.days' | t }}
+            </div>
+        </div>
+
+        {{ separator }}
+
+        <div class='timer__unit {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+          {% if enable_content_slide_in %}
+            style='--gsc-animation-order: 1;'
+          {% endif %}
+        >
+          <div class='timer__unit-value' data-timer-hours>00</div>
+            <div class='timer__unit-label {% if captitalize_unit_labels %} timer--capitalize {% endif %}' data-timer-hours-label>
+              {{ 'countdown_timer.store_front.hours' | t }}
+            </div>
+        </div>
+
+        {{ separator }}
+
+        <div class='timer__unit {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+          {% if enable_content_slide_in %}
+            style='--gsc-animation-order: 1;'
+          {% endif %}
+        >
+          <div class='timer__unit-value' data-timer-minutes>00</div>
+            <div class='timer__unit-label {% if captitalize_unit_labels %} timer--capitalize {% endif %}' data-timer-minutes-label>
+              {{ 'countdown_timer.store_front.minutes' | t }}
+            </div>
+        </div>
+
+        {{ separator }}
+
+        <div class='timer__unit {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+          {% if enable_content_slide_in %}
+            style='--gsc-animation-order: 1;'
+          {% endif %}
+        >
+          <div class='timer__unit-value' data-timer-seconds>00</div>
+            <div class='timer__unit-label {% if captitalize_unit_labels %} timer--capitalize {% endif %}' data-timer-seconds-label>
+              {{ 'countdown_timer.store_front.seconds' | t }}
+            </div>
+        </div>
+      </div>
+    </foreignObject>
+  </svg>
+</countdown-timer>

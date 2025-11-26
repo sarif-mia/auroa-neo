@@ -1,0 +1,40 @@
+{
+  "sections": {
+    "collection_list_page": {
+      "type": "collection-list-page",
+      "settings": {
+        "collections_to_show": "all",
+        "collection_per_page": 33,
+        "desktop_columns": 3,
+        "space_between_cards": "s",
+        "space_between_cards_mobile": "l",
+        "pagination_type": "load-button-pagination",
+        "title": "Collections",
+        "heading_size": "h5",
+        "heading_alignment": "center",
+        "img_ratio": "landscape",
+        "text_style": "on-image-bottom",
+        "collection_card_heading_size": "h6",
+        "show_product_count": "superscript",
+        "collection_card_content_align": "center",
+        "cards_color_scheme_variant": "own",
+        "cards_color_scheme": "10",
+        "cards_title_color": "#ffffff",
+        "cards_overlay_color": "#000000",
+        "cards_overlay_opacity": 25,
+        "container_size": "full-screen",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xl",
+        "section_spacing_bottom": "xxxl"
+      }
+    }
+  },
+  "order": [
+    "collection_list_page"
+  ]
+}

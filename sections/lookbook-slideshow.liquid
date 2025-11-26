@@ -1,0 +1,1390 @@
+{%- liquid
+  assign options = section.settings
+
+  assign container_size = options.container_size
+  assign color_scheme = settings.default_color_scheme
+  if options.color_scheme_variant == 'own'
+    assign color_scheme = options.color_scheme
+  endif
+  assign round_level = options.round_level
+
+  assign heading = options.heading
+  assign heading_size = options.heading_size
+  assign body_richtext = options.body_richtext
+  assign body_size = options.body_size
+
+  assign desktop_image = options.desktop_image
+  assign mobile_image = options.mobile_image
+
+  if mobile_image == blank
+    assign mobile_image = desktop_image
+  endif
+
+  assign desktop_image_ratio = options.desktop_image_ratio | times: 100
+  assign desktop_image_position = options.desktop_image_position
+  assign desktop_image_width = options.desktop_image_width
+  assign desktop_enable_overlay = options.desktop_enable_overlay
+
+  assign mobile_layout = options.mobile_layout
+  assign mobile_columns = options.mobile_columns
+  assign mobile_slider_grid_layout = 'grid'
+  if mobile_layout contains 'carousel'
+    assign mobile_slider_grid_layout = 'carousel'
+  endif
+  if mobile_layout contains 'slideshow'
+    assign mobile_slider_grid_layout = 'slideshow'
+  endif
+
+  assign remove_product_card_side_paddings = true
+  if options.space_between_cards == 'none'
+    assign remove_product_card_side_paddings = false
+  endif
+
+  assign mobile_image_ratio = options.mobile_image_ratio | times: 100
+  assign mobile_enable_overlay = options.mobile_enable_overlay
+
+  assign show_main_image_content = options.show_main_image_content
+  assign main_image_heading = options.main_image_heading
+  assign main_image_heading_size = options.main_image_heading_size
+  assign main_image_body_richtext = options.main_image_body_richtext
+  assign main_image_body_size = options.main_image_body_size
+  assign main_image_content_position = options.main_image_content_position
+  assign main_image_content_alignment = options.main_image_content_alignment
+
+  assign card_background = options.card_background
+
+  assign add_desktop_side_paddings = options.add_desktop_side_paddings
+  assign add_mobile_side_paddings = options.add_mobile_side_paddings
+
+  assign enable_pins = options.enable_pins
+
+  assign product_card_img_ratio = options.product_card_img_ratio
+  assign img_ratio_resize = options.img_ratio_resize
+  if product_card_img_ratio != 'default' and img_ratio_resize == 'fit'
+    assign product_card_img_ratio = img_ratio_resize | append: '-' | append: options.product_card_img_ratio
+  endif
+
+  assign product_card_align = options.product_card_content_alignment
+
+  assign enable_content_slide_in = settings.enable_content_slide_in
+  assign enable_image_zoom_out = settings.enable_image_zoom_out
+
+  assign image_class = 'lookbook__image'
+  if enable_image_zoom_out
+    assign image_class = image_class | append: ' scroll-trigger animate--zoom-out'
+  endif
+-%}
+
+{% liquid
+  assign swatch_patterns = settings.primary_custom_colors_and_patterns
+  assign primary_custom_colors_and_patterns = swatch_patterns | newline_to_br | split: '<br />'
+%}
+
+{%- liquid
+  assign show_background = section.settings.show_background
+  assign color_container_background = false
+
+  if show_background == false and settings.default_color_scheme.settings.background != color_scheme.settings.background
+    assign color_container_background = true
+  endif
+-%}
+
+{% capture section_background_color %}
+  {% render 'get-section-background-color', section: section %}
+{% endcapture %}
+
+{%- liquid
+  assign overlay_color_scheme_variant = section.settings.overlay_color_scheme_variant
+  assign current_overlay_color_scheme = color_scheme
+
+  if overlay_color_scheme_variant == 'own'
+    assign current_overlay_color_scheme = section.settings.overlay_color_scheme
+  endif
+
+  assign custom_overlay_color = current_overlay_color_scheme.settings.background.rgb | replace: ' ', ', '
+  assign custom_text_color = current_overlay_color_scheme.settings.text
+
+  assign desktop_enable_overlay = options.desktop_enable_overlay
+  assign desktop_overlay_opacity = options.desktop_overlay_opacity | divided_by: 100.00
+  assign mobile_enable_overlay = options.mobile_enable_overlay
+  assign mobile_overlay_opacity = options.mobile_overlay_opacity | divided_by: 100.00
+
+  if overlay_color_scheme_variant == 'custom'
+    assign custom_overlay_color = section.settings.custom_overlay_color.rgb | replace: ' ', ', '
+    assign custom_text_color = section.settings.custom_text_color
+  endif
+-%}
+
+{% capture css %}
+  {% style %}
+    .section-{{ section.id}} {
+      --gsc-section-spacing-top: var(--gsc-padding-block-{{ section.settings.section_spacing_top }});
+      --gsc-section-spacing-bottom: var(--gsc-padding-block-{{ section.settings.section_spacing_bottom }});
+      --gsc-img-ratio: {{ mobile_image_ratio }}%;
+      --gsc-pin-inner-color-pulse: {{ section.settings.pin_inner_color.red }}, {{ section.settings.pin_inner_color.green }}, {{ section.settings.pin_inner_color.blue }};
+      --gsc-pin-inner-color: {{ section.settings.pin_inner_color }};
+      --gsc-pin-outer-color: {{ section.settings.pin_outer_color }};
+      --gsc-columns: {{ mobile_columns }};
+
+      --gsc-lookbook-heading-alignment: {{ section.settings.heading_content_alignment }};
+      --gsc-space-between-cards: var(--gsc-gap-{{ section.settings.space_between_cards }});  
+
+      {% if mobile_enable_overlay %}
+        --gsc-overlay-color-rgb: {{custom_overlay_color}};
+        --gsc-overlay-opacity: {{mobile_overlay_opacity}};
+      {% else %}
+        --gsc-overlay-color-rgb: 0,0,0;
+        --gsc-overlay-opacity: 0;
+      {% endif %} 
+
+      {% if overlay_color_scheme_variant == 'custom' %}
+        --gsc-lookbook-overlay-text-color: {{ custom_text_color }};
+      {% endif %}
+    }
+    
+    @media {% render 'media-queries', screen: 'md' %} {
+      .section-{{ section.id }} {
+        --gsc-img-ratio: {{ desktop_image_ratio }}%;        
+        --gsc-slide-width: 100%;
+
+        {% if desktop_enable_overlay %}
+          --gsc-overlay-color-rgb: {{custom_overlay_color}};
+          --gsc-overlay-opacity: {{desktop_overlay_opacity}};
+        {% else %}
+          --gsc-overlay-color-rgb: 0,0,0;
+          --gsc-overlay-opacity: 0;
+        {% endif %}
+      }
+    }
+
+    {% for block in section.blocks %}
+      {% liquid
+        assign mobile_horizontal_position = block.settings.mobile_horizontal_position
+        assign mobile_vertical_position = block.settings.mobile_vertical_position
+        assign desktop_horizontal_position = block.settings.desktop_horizontal_position
+        assign desktop_vertical_position = block.settings.desktop_vertical_position
+
+        if section.settings.mobile_image == blank
+          assign mobile_horizontal_position = desktop_horizontal_position
+          assign mobile_vertical_position = desktop_vertical_position
+        endif
+      %}
+
+      .block-{{ block.id }} {
+        --gsc-lookbook-pin-horizontal-position: {{ mobile_horizontal_position }}%;
+        --gsc-lookbook-pin-vertical-position: {{ mobile_vertical_position }}%;
+      }      
+
+      @media {% render 'media-queries', screen: 'md' %} {
+        .block-{{ block.id }} {
+          --gsc-lookbook-pin-horizontal-position: {{ desktop_horizontal_position }}%;
+          --gsc-lookbook-pin-vertical-position: {{ desktop_vertical_position }}%;
+        }
+      }
+    {% endfor %}
+  {% endstyle %}
+{% endcapture %}
+
+{% render 'inline-css-minifier', css: css %}
+
+{% if heading != blank or body_richtext != blank %}
+  {% capture content %}
+    <div class="lookbook__content {% if color_container_background == false and add_desktop_side_paddings == false or add_mobile_side_paddings == false  %}spacing-inline-header{% endif %}">
+      {% if heading != blank %}
+        <h2 class='{{ heading_size }} lookbook__title {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+          {% if enable_content_slide_in %}
+            style='--gsc-animation-order: 1;'
+          {% endif %}
+        >{{heading}}</h2> 
+      {% endif %}
+      
+      {% if body_richtext != blank %}
+        <div class='{{ body_size }} {% if heading != blank %} body-color {% endif %} body-font-weight-from-global-settings lookbook__subtitle {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+          {% if enable_content_slide_in %}
+            style='--gsc-animation-order: 2;'
+          {% endif %}
+        >
+          {{body_richtext}} 
+        </div>
+      {% endif %}
+    </div>
+  {% endcapture %}
+{% endif %}
+
+{% if show_main_image_content == true and main_image_heading != blank or main_image_body_richtext != blank %}
+  {% capture main_image_content %}
+    <div class="lookbook__image-content lookbook__image-content--horizontal-{{main_image_content_position}} lookbook__image-content--vertical-{{main_image_content_alignment}}">
+      {% if main_image_heading != blank %}
+        <h2 class='{{ main_image_heading_size }}'>{{main_image_heading}}</h2> 
+      {% endif %}
+      
+      {% if main_image_body_richtext != blank %}
+        <div class='{{ main_image_body_size }}'>{{main_image_body_richtext}}</div>
+      {% endif %}
+    </div>
+  {% endcapture %}
+{% endif %}
+
+{% capture mobile_slider_grid %}
+  <slider-grid 
+    class='slider-grid {% if request.design_mode %}is-editor-mode{% endif %}'
+    {% if mobile_slider_grid_layout contains 'grid' %}
+      mobile-disabled
+      with-grid
+    {% endif %}
+  >
+    <div slider-grid-track class='slider-grid-track slider-grid__m-{{mobile_slider_grid_layout}}'>
+      {%- for block in section.blocks -%}
+        <div
+          class='slider-grid__slide lookbook__card-carousel--slideshow {% if enable_content_slide_in and enable_pins == false %}scroll-trigger animate--slide-in{% endif %}'
+          {% if enable_content_slide_in and enable_pins == false %}
+            style='--gsc-animation-order: {{forloop.index}};'
+          {% endif %}
+          slider-grid-slide
+          index='{{ forloop.index0 }}'
+        >
+          {%- if mobile_layout == 'carousel_horizontal_cards' -%}
+            {% render 'horizontal-product-card',
+              product: block.settings.product,
+              img_ratio: product_card_img_ratio,
+              data: 'data-lookbook-block',
+              block: block,
+              class: 'lookbook__product-card'
+            %}
+          {%- else -%}
+            {% render 'product-card',
+              product: block.settings.product,
+              img_ratio: product_card_img_ratio,
+              product_card_align: product_card_align,
+              add_side_paddings: remove_product_card_side_paddings,
+              with_bottom_spacing: true,
+              data: 'data-lookbook-block',
+              block: block,
+              class: 'lookbook__product-card',
+              primary_custom_colors_and_patterns: primary_custom_colors_and_patterns,
+              section_background_color: section_background_color
+            %}
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+    
+    {% if mobile_slider_grid_layout contains 'slideshow' -%}
+      {% render 'dynamic-dots',
+        dots_count: section.blocks.size,
+        visible_dots_count: 5,
+        active_dot_type: 'dot',
+        target: 'custom',
+        custom_class: 'slider-grid__dots'
+      %}
+    {% endif %}
+  </slider-grid>
+{% endcapture %}
+
+{% capture desktop_slider_grid %}
+  <slider-grid class='slider-grid'>
+    <div class='lookbook__slider-grid-slideshow-wrapper'>
+      <div slider-grid-track class='slider-grid-track slider-grid__d-slideshow' >
+        {%- for block in section.blocks -%}
+          <div
+            class='slider-grid__slide {% if enable_content_slide_in %}scroll-trigger animate--slide-in{% endif %}'
+            {% if enable_content_slide_in %}
+              style='--gsc-animation-order: {{forloop.index}};'
+            {% endif %}
+            slider-grid-slide
+            index='{{ forloop.index0 }}'
+          >
+            {% render 'product-card',
+              product: block.settings.product,
+              img_ratio: product_card_img_ratio,
+              product_card_align: product_card_align,
+              with_bottom_spacing: true,
+              data: 'data-lookbook-block',
+              block: block,
+              class: 'lookbook__product-card',
+              primary_custom_colors_and_patterns: primary_custom_colors_and_patterns,
+              section_background_color: section_background_color
+            %}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <button
+      type='button'
+      class='lookbook__slideshow-btn lookbook__slideshow-btn--prev'
+      data-direction='prev'
+      tabindex='0'
+      disabled
+    >
+      {%- render 'icon', icon_name: 'chevron', class: 'lookbook__slideshow-btn-icon x-flip' -%}
+    </button>
+
+    <button
+      type='button'
+      class='lookbook__slideshow-btn lookbook__slideshow-btn--next'
+      data-direction='next'
+      tabindex='0'
+      disabled
+    >
+      {%- render 'icon', icon_name: 'chevron', class: 'lookbook__slideshow-btn-icon' -%}
+    </button>
+
+    
+    {% render 'dynamic-dots',
+      dots_count: section.blocks.size,
+      visible_dots_count: 5,
+      active_dot_type: 'dot',
+      target: 'custom',
+      custom_class: 'slider-grid__dots slider-grid__dots--desktop-visible'
+    %}
+  </slider-grid>
+{% endcapture %}
+
+{% capture pins %}
+  {% if enable_pins and section.blocks.size > 0 %}
+    {% for block in section.blocks %}
+      <button 
+        data-block-id='{{ block.id }}' 
+        data-lookbook-pin 
+        type='button' 
+        class='block-{{ block.id }} lookbook__pin'
+        aria-label='{{ 'lookbook.screen_reader.pin' | t }}'
+        data-modal='#Lookbook-Popup-{{ section.id }}'
+      ></button>
+    {% endfor %}
+  {% endif %}
+{% endcapture %}
+
+<lookbook-component class='lookbook {% if round_level != 'default' %}round-level-{{round_level}}{% endif %} section section-{{ section.id }} color-{{ color_scheme }} spacing-block {% if add_mobile_side_paddings %}spacing-inline-mobile{% endif %} {% if add_desktop_side_paddings %}spacing-inline-desktop{% endif %} {% if color_container_background == false %}section-background{% endif %}'>
+  <div class='container container--{{ container_size }} lookbook__container {% if color_container_background %}container-background{% endif %}'>
+    {{ content }}
+
+    <div class='lookbook__wrapper lookbook__wrapper--slideshow {% if mobile_layout contains 'popup' %}lookbook__wrapper--mobile-popup{% endif %}'>
+      <div class='lookbook__main-image'>
+        <div class='lookbook__image-wrapper {% if enable_pins %}lookbook__image-wrapper--with-pins{% endif %} {% if desktop_image_position == 'right' %}lookbook__image-wrapper--on-right-side{% endif %} {% if overlay_color_scheme_variant != 'custom' %}color-{{current_overlay_color_scheme}}{% endif %}'>
+          <div class='shape shape--nature lookbook__desktop-content'>
+            {%- if desktop_image != blank -%}
+              <img
+                {% render 'image-attributes', image: desktop_image, class: image_class %}
+              >
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'image placeholder-image lookbook__image' }}
+            {%- endif -%}
+          </div>
+
+          <div class='shape shape--nature lookbook__mobile-content'>
+            {%- if mobile_image != blank -%}
+              <img
+                {% render 'image-attributes', image: mobile_image, class: image_class %}
+              >
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'image placeholder-image lookbook__image' }}
+            {%- endif -%}
+          </div>
+
+          <div class='lookbook__image-overlay'>{{ main_image_content }}</div>
+
+          {{ pins }}
+        </div>
+      </div>
+
+      {% if section.blocks.size > 0 %}
+        <div class='lookbook__products {% if enable_pins %}lookbook__desktop-content{% endif %} lookbook__products--bg-{{card_background}} {% if desktop_image_width == '32' %} lookbook__products--with-slideshow-30-percent-width {% endif %} {% if desktop_image_position == 'right' %} lookbook__products--on-left-side {% endif %} lookbook__products--with-slideshow'>
+          <div class='lookbook__desktop-content' data-lookbook-desktop-content>
+            {{ desktop_slider_grid }}
+          </div>
+
+          <div
+            class='lookbook__mobile-content {% if mobile_slider_grid_layout contains 'carousel' %}lookbook__mobile-content--with-overflow{% endif %}'
+            data-lookbook-mobile-content
+          >
+            {% if mobile_layout contains 'popup' %}
+              <lookbook-modal
+                class='lookbook__modal'
+                id='Lookbook-Popup-{{ section.id }}'
+                data-with-overlay
+                data-with-close-on-outside
+                data-lookbook-modal
+                data-overlay-important
+              >
+                <template data-modal-template='Lookbook-Popup-{{ section.id }}'>
+                  <div class='lookbook__modal-body'>
+                    <div class='lookbook__modal-content'>
+                      <div class='lookbook__modal-header'>
+                        <p class='lookbook__modal-header-title'>
+                          {{ 'lookbook.store_front.modal-header-title' | t }}
+                        </p>
+                        <modal-button
+                          data-action='close'
+                          class='lookbook__modal-close-wrapper'
+                          aria-label='{{ 'lookbook.screen_reader.close' | t }}'
+                          type='button'
+                          data-modal='#Lookbook-Popup-{{ section.id }}'
+                        >
+                          <div class='lookbook__modal-close-btn'></div>
+                        </modal-button>
+                      </div>
+
+                      {{ mobile_slider_grid }}
+                    </div>
+                  </div>
+                </template>
+              </lookbook-modal>
+
+            {% else %}
+              {{ mobile_slider_grid }}
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</lookbook-component>
+
+{% render 'save-section-data-in-global-scope', section: section %}
+
+{% schema %}
+{
+  "name": "t:sections.lookbook.name.slideshow",
+  "tag": "section",
+  "class": "shopify-section__lookbook",
+  "settings": [
+    {
+      "type": "select",
+      "id": "desktop_image_position",
+      "label": "t:sections.lookbook.image.desktop_position.label",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.lookbook.image.desktop_position.options.left"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.lookbook.image.desktop_position.options.right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_width",
+      "label": "t:sections.lookbook.image.desktop_width.label",
+      "options": [
+        {
+          "value": "11",
+          "label": "t:sections.lookbook.image.desktop_width.options.11"
+        },
+        {
+          "value": "32",
+          "label": "t:sections.lookbook.image.desktop_width.options.32"
+        }
+      ],
+      "default": "11"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "t:sections.lookbook.cards.mobile_layout.label",
+      "options": [
+        {
+          "value": "grid",
+          "label": "t:sections.lookbook.cards.mobile_layout.options.option_1"
+        },
+        {
+          "value": "slideshow",
+          "label": "t:sections.lookbook.cards.mobile_layout.options.option_2"
+        },
+        {
+          "value": "carousel_popup",
+          "label": "t:sections.lookbook.cards.mobile_layout.options.option_3"
+        },
+        {
+          "value": "slideshow_popup",
+          "label": "t:sections.lookbook.cards.mobile_layout.options.option_4"
+        },
+        {
+          "value": "carousel_vertical_cards",
+          "label": "t:sections.lookbook.cards.mobile_layout.options.option_5"
+        },
+        {
+          "value": "carousel_horizontal_cards",
+          "label": "t:sections.lookbook.cards.mobile_layout.options.option_6"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.general_section_settings.mobile_columns_options.1"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.general_section_settings.mobile_columns_options.2"
+        }
+      ],
+      "default": "2",
+      "label": "t:sections.general_section_settings.mobile_columns_label",
+      "visible_if": "{{ section.settings.mobile_layout == 'grid' }}"
+    },
+
+    {
+      "type": "select",
+      "id": "space_between_cards",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.general_section_settings.gap.options.none"
+        },
+        {
+          "value": "xxxs",
+          "label": "t:sections.general_section_settings.gap.options.xxxs"
+        },
+        {
+          "value": "xxs",
+          "label": "t:sections.general_section_settings.gap.options.xxs"
+        },
+        {
+          "value": "xs",
+          "label": "t:sections.general_section_settings.gap.options.xs"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.general_section_settings.gap.options.s"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.general_section_settings.gap.options.m"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.general_section_settings.gap.options.l"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.general_section_settings.gap.options.xl"
+        },
+        {
+          "value": "xxl",
+          "label": "t:sections.general_section_settings.gap.options.xxl"
+        },
+        {
+          "value": "xxxl",
+          "label": "t:sections.general_section_settings.gap.options.xxxl"
+        }
+      ],
+      "default": "l",
+      "label": "t:sections.general_section_settings.gap.label.gap_mobile"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.lookbook.content.settings_header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.lookbook.content.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.general_section_settings.label_for_heading_size_setting",
+      "options": [
+        {
+          "value": "display1",
+          "label": "t:sections.general_section_settings.display_size_1_option"
+        },
+        {
+          "value": "display2",
+          "label": "t:sections.general_section_settings.display_size_2_option"
+        },
+        {
+          "value": "display3",
+          "label": "t:sections.general_section_settings.display_size_3_option"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.general_section_settings.heading_size_1_option"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.general_section_settings.heading_size_2_option"
+        },
+        {
+          "value": "h3",
+          "label": "t:sections.general_section_settings.heading_size_3_option"
+        },
+        {
+          "value": "h4",
+          "label": "t:sections.general_section_settings.heading_size_4_option"
+        },
+        {
+          "value": "h5",
+          "label": "t:sections.general_section_settings.heading_size_5_option"
+        },
+        {
+          "value": "h6",
+          "label": "t:sections.general_section_settings.heading_size_6_option"
+        },
+        {
+          "value": "caption1",
+          "label": "t:sections.general_section_settings.caption_size_1_option"
+        },
+        {
+          "value": "caption2",
+          "label": "t:sections.general_section_settings.caption_size_2_option"
+        },
+        {
+          "value": "caption3",
+          "label": "t:sections.general_section_settings.caption_size_3_option"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "richtext",
+      "id": "body_richtext",
+      "label": "t:sections.lookbook.content.body.label"
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "t:sections.general_section_settings.label_for_body_size_setting",
+      "options": [
+        {
+          "value": "body0",
+          "label": "t:sections.general_section_settings.body_size_0_option"
+        },
+        {
+          "value": "body1",
+          "label": "t:sections.general_section_settings.body_size_1_option"
+        },
+        {
+          "value": "body2",
+          "label": "t:sections.general_section_settings.body_size_2_option"
+        },
+        {
+          "value": "body3",
+          "label": "t:sections.general_section_settings.body_size_3_option"
+        },
+        {
+          "value": "body4",
+          "label": "t:sections.general_section_settings.body_size_4_option"
+        },
+        {
+          "value": "body5",
+          "label": "t:sections.general_section_settings.body_size_5_option"
+        },
+        {
+          "value": "body6",
+          "label": "t:sections.general_section_settings.body_size_6_option"
+        }
+      ],
+      "default": "body3",
+      "info": "t:sections.lookbook.content.body_size.info"
+    },
+    {
+      "type": "text_alignment",
+      "id": "heading_content_alignment",
+      "label": "t:sections.lookbook.content.content_alignment.label",
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.lookbook.cards.settings_header.content"
+    },
+    {
+      "type": "select",
+      "id": "product_card_img_ratio",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.general_section_settings.img_ratio_option_default_label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.general_section_settings.img_ratio_option_square_label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.general_section_settings.img_ratio_option_portrait_label"
+        },
+        {
+          "value": "portrait-xl",
+          "label": "t:sections.general_section_settings.img_ratio_option_portrait_xl_label"
+        },
+        {
+          "value": "landscape",
+          "label": "t:sections.general_section_settings.img_ratio_option_landscape_label"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.general_section_settings.ratio_label"
+    },
+    {
+      "type": "select",
+      "id": "img_ratio_resize",
+      "options": [
+        {
+          "value": "fill",
+          "label": "t:sections.general_section_settings.card_img_resize_fill_label"
+        },
+        {
+          "value": "fit",
+          "label": "t:sections.general_section_settings.card_img_resize_fit_label"
+        }
+      ],
+      "default": "fill",
+      "label": "t:sections.general_section_settings.card_img_resize_label",
+      "visible_if": "{{ section.settings.product_card_img_ratio != 'default' }}"
+    },
+    {
+      "type": "text_alignment",
+      "id": "product_card_content_alignment",
+      "label": "t:sections.lookbook.cards.content_alignment.label",
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "card_background",
+      "label": "t:sections.lookbook.cards.card_background.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.lookbook.cards.card_background.options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:sections.lookbook.cards.card_background.options.solid"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.lookbook.cards.card_background.options.outline"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.lookbook.image.settings_header.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "t:sections.lookbook.image.desktop_image.label"
+    },
+    {
+      "type": "range",
+      "id": "desktop_image_ratio",
+      "min": 0.2,
+      "max": 2,
+      "step": 0.1,
+      "default": 1,
+      "unit": ":1",
+      "label": "t:sections.general_section_settings.ratio_label"
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_enable_overlay",
+      "default": false,
+      "label": "t:sections.general_section_settings.overlay.checkbox_label"
+    },
+    {
+      "type": "range",
+      "id": "desktop_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 25,
+      "unit": "%",
+      "label": "t:sections.general_section_settings.opacity_label",
+      "visible_if": "{{ section.settings.desktop_enable_overlay == true }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "t:sections.lookbook.image.mobile_image.label"
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_ratio",
+      "min": 0.2,
+      "max": 2,
+      "step": 0.1,
+      "default": 1,
+      "unit": ":1",
+      "label": "t:sections.general_section_settings.ratio_label"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_enable_overlay",
+      "default": false,
+      "label": "t:sections.general_section_settings.overlay.checkbox_label"
+    },
+    {
+      "type": "range",
+      "id": "mobile_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 25,
+      "unit": "%",
+      "label": "t:sections.general_section_settings.opacity_label",
+      "visible_if": "{{ section.settings.mobile_enable_overlay == true }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.lookbook.image.overlay_content_header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_main_image_content",
+      "default": true,
+      "label": "t:sections.lookbook.image.show_overlay_content"
+    },
+    {
+      "type": "text",
+      "id": "main_image_heading",
+      "label": "t:sections.lookbook.content.heading.label",
+      "default": "Featured image",
+      "visible_if": "{{ section.settings.show_main_image_content == true }}"
+    },
+    {
+      "type": "select",
+      "id": "main_image_heading_size",
+      "label": "t:sections.general_section_settings.label_for_heading_size_setting",
+      "options": [
+        {
+          "value": "display1",
+          "label": "t:sections.general_section_settings.display_size_1_option"
+        },
+        {
+          "value": "display2",
+          "label": "t:sections.general_section_settings.display_size_2_option"
+        },
+        {
+          "value": "display3",
+          "label": "t:sections.general_section_settings.display_size_3_option"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.general_section_settings.heading_size_1_option"
+        },
+        {
+          "value": "h2",
+          "label": "t:sections.general_section_settings.heading_size_2_option"
+        },
+        {
+          "value": "h3",
+          "label": "t:sections.general_section_settings.heading_size_3_option"
+        },
+        {
+          "value": "h4",
+          "label": "t:sections.general_section_settings.heading_size_4_option"
+        },
+        {
+          "value": "h5",
+          "label": "t:sections.general_section_settings.heading_size_5_option"
+        },
+        {
+          "value": "h6",
+          "label": "t:sections.general_section_settings.heading_size_6_option"
+        },
+        {
+          "value": "caption1",
+          "label": "t:sections.general_section_settings.caption_size_1_option"
+        },
+        {
+          "value": "caption2",
+          "label": "t:sections.general_section_settings.caption_size_2_option"
+        },
+        {
+          "value": "caption3",
+          "label": "t:sections.general_section_settings.caption_size_3_option"
+        }
+      ],
+      "default": "h4",
+      "visible_if": "{{ section.settings.show_main_image_content == true }}"
+    },
+    {
+      "type": "richtext",
+      "id": "main_image_body_richtext",
+      "label": "t:sections.lookbook.content.body.label",
+      "default": "<p>Add an image that features all the products you want to showcase.</p>",
+      "visible_if": "{{ section.settings.show_main_image_content == true }}"
+    },
+    {
+      "type": "select",
+      "id": "main_image_body_size",
+      "label": "t:sections.general_section_settings.label_for_body_size_setting",
+      "options": [
+        {
+          "value": "body0",
+          "label": "t:sections.general_section_settings.body_size_0_option"
+        },
+        {
+          "value": "body1",
+          "label": "t:sections.general_section_settings.body_size_1_option"
+        },
+        {
+          "value": "body2",
+          "label": "t:sections.general_section_settings.body_size_2_option"
+        },
+        {
+          "value": "body3",
+          "label": "t:sections.general_section_settings.body_size_3_option"
+        },
+        {
+          "value": "body4",
+          "label": "t:sections.general_section_settings.body_size_4_option"
+        },
+        {
+          "value": "body5",
+          "label": "t:sections.general_section_settings.body_size_5_option"
+        },
+        {
+          "value": "body6",
+          "label": "t:sections.general_section_settings.body_size_6_option"
+        }
+      ],
+      "default": "body3",
+      "info": "t:sections.lookbook.content.body_size.info",
+      "visible_if": "{{ section.settings.show_main_image_content == true }}"
+    },
+    {
+      "type": "select",
+      "id": "main_image_content_position",
+      "label": "t:sections.lookbook.image.content_position.label",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:sections.lookbook.image.content_position.options.top"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.lookbook.image.content_position.options.center"
+        },
+        {
+          "value": "bottom",
+          "label": "t:sections.lookbook.image.content_position.options.bottom"
+        }
+      ],
+      "default": "bottom",
+      "visible_if": "{{ section.settings.show_main_image_content == true }}"
+    },
+    {
+      "type": "text_alignment",
+      "id": "main_image_content_alignment",
+      "label": "t:sections.lookbook.content.content_alignment.label",
+      "default": "left",
+      "visible_if": "{{ section.settings.show_main_image_content == true }}"
+    },
+    {
+      "type": "select",
+      "id": "overlay_color_scheme_variant",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.default"
+        },
+        {
+          "value": "own",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.own"
+        },
+        {
+          "value": "custom",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.custom"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.general_section_settings.custom_color_scheme.header",
+      "visible_if": "{{ section.settings.show_main_image_content == true }}"
+    },
+    {
+      "type": "color_scheme",
+      "id": "overlay_color_scheme",
+      "default": "2",
+      "label": "t:sections.general_section_settings.color_scheme_label",
+      "visible_if": "{{ section.settings.show_main_image_content == true and section.settings.overlay_color_scheme_variant == 'own' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_text_color",
+      "label": "t:sections.general_section_settings.custom_color_scheme.text_color",
+      "default": "#FFFFFF",
+      "alpha": true,
+      "visible_if": "{{ section.settings.show_main_image_content == true and section.settings.overlay_color_scheme_variant == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_overlay_color",
+      "label": "t:sections.general_section_settings.custom_color_scheme.image_overlay",
+      "default": "#000000",
+      "alpha": true,
+      "visible_if": "{{ section.settings.show_main_image_content == true and section.settings.overlay_color_scheme_variant == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.lookbook.pin_colors_settings_header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_pins",
+      "default": true,
+      "label": "t:sections.lookbook.enable_pins.label"
+    },
+    {
+      "type": "color",
+      "id": "pin_inner_color",
+      "default": "#ffffff",
+      "label": "t:sections.lookbook.pin_inner_color.label",
+      "visible_if": "{{ section.settings.enable_pins == true }}"
+    },
+    {
+      "type": "color",
+      "id": "pin_outer_color",
+      "default": "#000000",
+      "label": "t:sections.lookbook.pin_outer_color.label",
+      "visible_if": "{{ section.settings.enable_pins == true }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.general_section_settings.appearance.header_title"
+    },
+    {
+      "type": "select",
+      "id": "container_size",
+      "options": [
+        {
+          "value": "full-screen",
+          "label": "t:sections.general_section_settings.container_size.screen_width_option"
+        },
+        {
+          "value": "page-width",
+          "label": "t:sections.general_section_settings.container_size.page_width_option"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.general_section_settings.container_size.large_width_option"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.general_section_settings.container_size.medium_width_option"
+        }
+      ],
+      "default": "page-width",
+      "label": "t:sections.general_section_settings.container_size.label"
+    },
+    {
+      "type": "select",
+      "id": "round_level",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:settings_schema.appearance.round_level.options.default"
+        },
+        {
+          "value": "0",
+          "label": "t:settings_schema.appearance.round_level.options.option_0"
+        },
+        {
+          "value": "1",
+          "label": "t:settings_schema.appearance.round_level.options.option_1"
+        },
+        {
+          "value": "2",
+          "label": "t:settings_schema.appearance.round_level.options.option_2"
+        },
+        {
+          "value": "3",
+          "label": "t:settings_schema.appearance.round_level.options.option_3"
+        },
+        {
+          "value": "4",
+          "label": "t:settings_schema.appearance.round_level.options.option_4"
+        },
+        {
+          "value": "5",
+          "label": "t:settings_schema.appearance.round_level.options.option_5"
+        },
+        {
+          "value": "6",
+          "label": "t:settings_schema.appearance.round_level.options.option_6"
+        },
+        {
+          "value": "7",
+          "label": "t:settings_schema.appearance.round_level.options.option_7"
+        },
+        {
+          "value": "8",
+          "label": "t:settings_schema.appearance.round_level.options.option_8"
+        }
+      ],
+      "default": "default",
+      "label": "t:settings_schema.appearance.round_level.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_variant",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.default"
+        },
+        {
+          "value": "own",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.own"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.general_section_settings.color_scheme_variant.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "2",
+      "label": "t:sections.general_section_settings.color_scheme_label",
+      "visible_if": "{{ section.settings.color_scheme_variant == 'own' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_background",
+      "default": false,
+      "label": "t:sections.general_section_settings.enable_background_around_container_label",
+      "visible_if": "{{ section.settings.color_scheme_variant == 'own' and settings.default_color_scheme != section.settings.color_scheme }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.general_section_settings.paddings.header_title"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_desktop_side_paddings",
+      "default": true,
+      "label": "t:sections.general_section_settings.paddings.add_side_paddings.desktop_label"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_mobile_side_paddings",
+      "default": true,
+      "label": "t:sections.general_section_settings.paddings.add_side_paddings.mobile_label"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_top",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.none"
+        },
+        {
+          "value": "xxxxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxxs"
+        },
+        {
+          "value": "xxxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxs"
+        },
+        {
+          "value": "xxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxs"
+        },
+        {
+          "value": "xs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xs"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.s"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.m"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.l"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xl"
+        },
+        {
+          "value": "xxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxl"
+        },
+        {
+          "value": "xxxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxl"
+        },
+        {
+          "value": "xxxxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxxl"
+        }
+      ],
+      "default": "xl",
+      "label": "t:sections.general_section_settings.paddings.section_spacing_top.label"
+    },
+    {
+      "type": "select",
+      "id": "section_spacing_bottom",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.none"
+        },
+        {
+          "value": "xxxxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxxs"
+        },
+        {
+          "value": "xxxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxs"
+        },
+        {
+          "value": "xxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxs"
+        },
+        {
+          "value": "xs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xs"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.s"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.m"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.l"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xl"
+        },
+        {
+          "value": "xxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxl"
+        },
+        {
+          "value": "xxxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxl"
+        },
+        {
+          "value": "xxxxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxxl"
+        }
+      ],
+      "default": "xl",
+      "label": "t:sections.general_section_settings.paddings.section_spacing_bottom.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pin_product",
+      "name": "t:sections.lookbook.blocks.pin_product.name",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.lookbook.blocks.pin_product.product.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.hotspots.desktop_pin_header"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:sections.hotspots.info_about_position"
+        },
+        {
+          "type": "range",
+          "id": "desktop_horizontal_position",
+          "min": 5,
+          "max": 95,
+          "step": 1,
+          "default": 11,
+          "unit": "t:sections.hotspots.horizontal_position.unit",
+          "label": "t:sections.hotspots.horizontal_position.label"
+        },
+        {
+          "type": "range",
+          "id": "desktop_vertical_position",
+          "min": 5,
+          "max": 95,
+          "step": 1,
+          "default": 51,
+          "unit": "t:sections.hotspots.vertical_position.unit",
+          "label": "t:sections.hotspots.vertical_position.label"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.hotspots.mobile_pin_header"
+        },
+        {
+          "type": "range",
+          "id": "mobile_horizontal_position",
+          "min": 5,
+          "max": 95,
+          "step": 1,
+          "default": 10,
+          "unit": "t:sections.hotspots.horizontal_position.unit",
+          "label": "t:sections.hotspots.horizontal_position.label"
+        },
+        {
+          "type": "range",
+          "id": "mobile_vertical_position",
+          "min": 5,
+          "max": 95,
+          "step": 1,
+          "default": 30,
+          "unit": "t:sections.hotspots.vertical_position.unit",
+          "label": "t:sections.hotspots.vertical_position.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.lookbook.name.slideshow",
+      "blocks": [
+        {
+          "type": "pin_product",
+          "settings": {
+            "mobile_horizontal_position": 21,
+            "mobile_vertical_position": 51,
+            "desktop_horizontal_position": 21,
+            "desktop_vertical_position": 51
+          }
+        },
+        {
+          "type": "pin_product",
+          "settings": {
+            "mobile_horizontal_position": 49,
+            "mobile_vertical_position": 30,
+            "desktop_horizontal_position": 49,
+            "desktop_vertical_position": 30
+          }
+        },
+        {
+          "type": "pin_product",
+          "settings": {
+            "mobile_horizontal_position": 66,
+            "mobile_vertical_position": 74,
+            "desktop_horizontal_position": 66,
+            "desktop_vertical_position": 74
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

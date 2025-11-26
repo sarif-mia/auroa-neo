@@ -1,0 +1,32 @@
+<product-breadcrumbs
+  data-product-block='{{ block.id }}'
+  class='product-general-info-block product-breadcrumbs-block body-color'
+  {{ block.shopify_attributes }}
+>
+  <a
+    class='unstyled-link product-breadcrumbs-block__link'
+    href='/'
+    aria-label='{{ 'product.store_front.breadcrumb_home_link_title' | t }}'
+  >
+    {{ 'product.store_front.breadcrumb_home_link_title' | t }}
+  </a>
+
+  <span class='product-breadcrumbs-block__divider'> / </span>
+
+  <a
+    class='unstyled-link product-breadcrumbs-block__link'
+    href='/collections/all'
+    aria-label='Products'
+    data-collection-link
+  >
+    Products
+  </a>
+
+  {% if block.settings.show_breadcrumbs_product_title == true
+    or section.settings.show_breadcrumbs_product_title == true
+  %}
+    <span class='product-breadcrumbs-block__divider'> / </span>
+
+    <span class='product-breadcrumbs-block__product-title'>{{ product.title }}</span>
+  {% endif %}
+</product-breadcrumbs>

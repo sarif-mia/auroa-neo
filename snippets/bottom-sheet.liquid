@@ -1,0 +1,28 @@
+{% liquid
+  # Props
+  assign close_on_overlay = close_on_overlay | default: true, allow_false: true
+  assign closable = closable | default: true, allow_false: true
+  assign content = content | default: ''
+  assign id = id | default: null
+  assign class = class | default: ''
+  assign attributes = attributes | default: null
+%}
+
+<bottom-sheet
+  {% if id %}
+    id='{{ id }}'
+  {% endif %}
+  class='bottom-sheet {{ class }}'
+  data-close-on-overlay='{{ close_on_overlay }}'
+  {% if attributes != blank %}
+    {{ attributes }}
+  {% endif %}
+>
+  <div class='bottom-sheet__overlay'></div>
+  <div class='bottom-sheet__content'>
+    {{ content }}
+    {% if closable %}
+      {% render 'icon', class: 'bottom-sheet__close-button', icon_name: 'close-medium-normal' %}
+    {% endif %}
+  </div>
+</bottom-sheet>

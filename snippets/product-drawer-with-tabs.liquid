@@ -1,0 +1,68 @@
+{% if block.settings.popup_link_text != blank %}
+  {%- liquid
+    assign options = block.settings
+    assign btn_text = options.popup_link_text
+    assign icon_type = options.icon_type
+    assign icon = options.icon
+    assign custom_icon_image = options.custom_icon_image
+
+    assign with_drawer = true
+    assign tab_count = 0
+
+    if options.tab_1_title != blank and options.tab_1_text != blank or options.tab_1_page != blank
+      assign tab_count = tab_count | plus: 1
+    endif
+
+    if options.tab_2_title != blank and options.tab_2_text != blank or options.tab_2_page != blank
+      assign tab_count = tab_count | plus: 1
+    endif
+
+    if options.tab_3_title != blank and options.tab_3_text != blank or options.tab_3_page != blank
+      assign tab_count = tab_count | plus: 1
+    endif
+
+    if tab_count == 0
+      assign with_drawer = false
+    endif
+    
+    assign btn_style = 'custom'
+    if options.button_background_gradient == blank and options.button_background_color == 'rgba(0,0,0,0)' and options.button_border_gradient == blank and options.button_border_color == 'rgba(0,0,0,0)'
+      assign btn_style = 'text'    
+    endif
+  -%}
+
+  <div data-product-block='{{ block.id }}' class='block-{{ block.id }} product-drawer-tabs-trigger-block' {{ block.shopify_attributes }}>
+      {% if with_drawer == true %}
+        <sidebar-button>
+      {% endif %}
+
+        <button
+          data-sidebar-button
+          class='unstyled-button product-drawer-tabs-trigger-button {% if with_drawer == false %}product-drawer-tabs-trigger--no-drawer{% endif %} {{ block.settings.heading_size }} {% if btn_style == 'custom' %}product-drawer-tabs-trigger-button--solid {% if options.button_border_gradient != blank %}product-button--gradient-border{% endif %}{% endif %}'
+          data-sidebar-id='product-information-sidebar-{{ block.id }}-{{ product.id }}-{{ sectionId }}'
+          aria-label='{{ btn_text | strip_html | escape }}'
+          type='button'
+        >
+          {% if icon_type != 'none' %}
+            <div class='product-drawer-tabs-trigger-button__icon-wrap'>
+              {%- if icon_type == 'custom' and custom_icon_image != blank -%}
+                <img
+                  {% render 'image-attributes',
+                    image: custom_icon_image,
+                    size: 'small',
+                    class: 'product-drawer-tabs-trigger-button__icon'
+                  %}
+                >
+              {%- elsif icon_type == 'preset' -%}
+                {% render 'icon-pack', icon: icon, class: 'product-drawer-tabs-trigger-button__icon' %}
+              {%- endif -%}
+            </div>
+          {% endif %}
+          <span class='product-drawer-tabs-trigger-button__title'>{{ btn_text }}</span>
+        </button>
+
+      {% if with_drawer == true %}
+        </sidebar-button>
+      {% endif %}
+  </div>
+{% endif %}

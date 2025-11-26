@@ -1,0 +1,84 @@
+{
+  "sections": {
+    "featured-blog-posts": {
+      "type": "featured-blog-post",
+      "blocks": {
+        "featured_post_tjDL44": {
+          "type": "featured_post",
+          "settings": {}
+        },
+        "post-1": {
+          "type": "featured_post",
+          "settings": {}
+        },
+        "post-2": {
+          "type": "featured_post",
+          "settings": {}
+        },
+        "post-3": {
+          "type": "featured_post",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "featured_post_tjDL44",
+        "post-1",
+        "post-2",
+        "post-3"
+      ],
+      "settings": {
+        "show_author": true,
+        "show_date": true,
+        "show_comment_count": true,
+        "show_read_more": true,
+        "show_subheading": true,
+        "container_size": "full-screen",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "primary",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "xxs",
+        "section_spacing_bottom": "s"
+      }
+    },
+    "blog": {
+      "type": "blog",
+      "settings": {
+        "show_title": true,
+        "show_rss_icon": false,
+        "show_navigation_tags": "all",
+        "selected_tags": "",
+        "collapse_extra_tags": false,
+        "img_ratio": 0.7,
+        "article_per_page": 6,
+        "article_per_row": 3,
+        "space_between_cards": "s",
+        "pagination_type": "load-button-pagination",
+        "show_author": true,
+        "show_date": true,
+        "show_comment_count": true,
+        "show_read_more": true,
+        "show_subheading": true,
+        "show_card_tags": "all",
+        "selected_card_tags": "",
+        "tags_card_position": "on_image",
+        "collapse_extra_card_tags": false,
+        "container_size": "full-screen",
+        "round_level": "default",
+        "color_scheme_variant": "default",
+        "color_scheme": "default",
+        "show_background": true,
+        "add_desktop_side_paddings": true,
+        "add_mobile_side_paddings": true,
+        "section_spacing_top": "s",
+        "section_spacing_bottom": "xxxxl"
+      }
+    }
+  },
+  "order": [
+    "featured-blog-posts",
+    "blog"
+  ]
+}

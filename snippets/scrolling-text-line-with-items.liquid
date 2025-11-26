@@ -1,0 +1,67 @@
+{% liquid
+  assign items = items
+  if items == blank
+    assign items = (0..0)
+  endif
+%}
+
+<scrolling-text-line
+  class='block-{{ block.id }} block-wrapper {% if section.settings.container_size == 'full-screen' %} block-wrapper--full-screen {% endif %} {% if section.settings.section_layout == "crossed" and section.settings.inclination_degree != 0 and section.blocks.size > 1 %} block-wrapper--crossed {% endif %}'
+  {% if block.settings.font_style == 'mixed' %}
+    with-font-mixed
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  <div class='scrolling-text__item-wrapper' data-scrolling-text-line>
+    {% for item in items %}
+      {% capture is_even %}
+          {% cycle "false", "true" %}
+        {% endcapture %}
+
+      {% liquid
+        assign announcement_text = block.settings.announcement_text
+        if block.settings.text_type == 'title'
+          assign announcement_text = item.title | default: block.settings.announcement_text
+        endif
+
+        assign font_style = block.settings.font_style
+        if block.settings.font_style == 'mixed' and items.count > 1
+          capture is_even
+            cycle false, true
+          endcapture
+
+          case is_even
+            when 'true'
+              assign font_style = 'outline'
+            when 'false'
+              assign font_style = 'solid'
+          endcase
+        endif
+
+        assign image = item.image
+        if image == blank
+          assign image = item.featured_image
+        endif
+
+        assign image_class = 'scrolling-text__icon'
+        if block.settings.enable_custom_image_ratio == true
+          assign image_class = image_class | append: ' scrolling-text__icon--with-custom-ratio'
+        endif
+      %}
+
+      <div class='scrolling-text scrolling-text--with-{{ block.settings.font_family }}-font'>
+        {% if image != blank %}
+          <img {% render 'image-attributes', image: image, size: 'xsmall', class: image_class %}>
+        {% endif %}
+
+        <p class='scrolling-text__text {% if font_style == 'outline' %} scrolling-text__text--font-outline {% endif %} {% if block.settings.text_color_gradient != blank %} scrolling-text__text--color-gradient {% endif %}'>
+          {{ announcement_text }}
+        </p>
+
+        {% if item.url != blank %}
+          <a href='{{ item.url }}' class='scrolling-text__url' aria-label='{{ item.url }}'></a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</scrolling-text-line>

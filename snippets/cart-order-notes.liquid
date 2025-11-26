@@ -1,0 +1,111 @@
+{% liquid
+  # Props
+  assign view_mode = view_mode | default: null
+  assign show_order_note = show_order_note | default: true, allow_false: true
+  assign show_shipping_calculator = show_shipping_calculator | default: true, allow_false: true
+  assign show_apply_button = show_apply_button | default: false
+  assign header_with_border = header_with_border | default: false
+
+  # Background style: clean/solid/outline
+  assign background_style = background_style | default: 'clean'
+
+  # View variant: default/inside-cart/inside-subtotal
+  assign view_variant = view_variant | default: 'default'
+
+  assign class = class | default: ''
+  assign style = style | default: null
+
+  assign show_order_notes = false
+  if show_order_note or show_shipping_calculator or show_discount_code
+    assign show_order_notes = true
+  endif
+%}
+
+{% if show_order_notes %}
+  <cart-order-notes
+    class='cart-order-notes cart-order-notes--{{ background_style }} cart-order-notes--variant-{{ view_variant }} {{ class }}'
+    {% if style %}
+      style='{{ style }}'
+    {% endif %}
+    {% if view_mode %}
+      data-view-mode='{{ view_mode }}'
+    {% endif %}
+  >
+    <div class='cart-order-notes__header{% if header_with_border %} cart-order-notes__header--with-border{% endif %}'>
+      {% if show_order_note %}
+        <div class='cart-order-notes__button' data-order-note>
+          {% render 'icon', icon_name: 'note' %}
+          <span>{{ 'general.subtotal.store_front.order_note_button' | t }}</span>
+
+          {% if view_mode == 'popup' %}
+            {% unless show_order_note and show_shipping_calculator and show_discount_code %}
+              {% render 'icon', class: 'cart-order-notes__plus-icon', icon_name: 'plus' %}
+            {% endunless %}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if show_order_note and show_discount_code %}
+        <div class='cart-order-notes__divider'></div>
+      {% endif %}
+
+      {% if show_discount_code %}
+        <div class='cart-order-notes__button' data-discount-code>
+          {% render 'icon', icon_name: 'discount-label' %}
+          <span>{{ 'general.subtotal.store_front.discount_code' | t }}</span>
+
+          {% if view_mode == 'popup' %}
+            {% unless show_order_note and show_shipping_calculator and show_discount_code %}
+              {% render 'icon', class: 'cart-order-notes__plus-icon', icon_name: 'plus' %}
+            {% endunless %}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if show_shipping_calculator and show_discount_code %}
+        <div class='cart-order-notes__divider'></div>
+      {% endif %}
+
+      {% if show_shipping_calculator %}
+        <div class='cart-order-notes__button' data-shipping-calculator>
+          {% render 'icon', icon_name: 'shipping-box' %}
+          <span>{{ 'general.subtotal.store_front.shipping_calculator_button' | t }}</span>
+
+          {% if view_mode == 'popup' %}
+            {% unless show_order_note and show_shipping_calculator and show_discount_code %}
+              {% render 'icon', class: 'cart-order-notes__plus-icon', icon_name: 'plus' %}
+            {% endunless %}
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class='cart-order-notes__content'>
+      {%- capture order_note -%}
+        {% render 'cart-note',
+           class: 'cart-order-notes__cart-note',
+           note: cart.note,
+           show_apply_button: show_apply_button
+        %}
+      {%- endcapture -%}
+
+      {%- capture discount_code -%}
+        {% render 'cart-discount-code', class: 'cart-order-notes__discount-code' %}
+      {%- endcapture -%}
+
+      {%- capture shipping_calculator -%}
+        {% render 'shipping-calculator', class: 'cart-order-notes__shipping-calculator' %}
+      {%- endcapture -%}
+
+      {% if view_mode == 'popup' %}
+        {% render 'bottom-sheet', close_on_overlay: true, content: order_note %}
+        {% render 'bottom-sheet', close_on_overlay: true, content: discount_code %}
+        {% render 'bottom-sheet', close_on_overlay: true, content: shipping_calculator %}
+      {% else %}
+        {{ order_note }}
+        {{ discount_code }}
+        {{ shipping_calculator }}
+      {% endif %}
+    </div>
+  </cart-order-notes>
+{% endif %}

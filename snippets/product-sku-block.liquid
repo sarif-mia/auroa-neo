@@ -1,0 +1,15 @@
+{%- liquid
+  assign sku = product.selected_or_first_available_variant.sku
+
+  if product == blank
+    assign sku = 21623612
+  endif
+-%}
+
+<div data-product-block='{{ block.id }}' class='product-general-info-block' {{ block.shopify_attributes }}>
+  <div class='product-general-info__text' id='product-sku-{{ product.id }}-{{ sectionId }}'>
+    <span class='product__sku body-color'>
+      {{ 'product.store_front.sku' | t: sku: sku }}
+    </span>
+  </div>
+</div>

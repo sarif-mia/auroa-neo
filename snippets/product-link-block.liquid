@@ -1,0 +1,12 @@
+{%- if product != blank -%}
+  <a
+    class='link'
+    href='{{ product.url }}'
+    aria-label='{{ 'product.screen_reader.view_full_details' | t }}'
+  >
+    <span class="link-parent-for-hover">
+      <span class='link__text'>{{ 'product.store_front.view_full_details' | t }}</span>
+    </span>
+    {%- render 'icon', icon_name: 'arrow', stroke_width: 1.5 -%}
+  </a>
+{%- endif -%}

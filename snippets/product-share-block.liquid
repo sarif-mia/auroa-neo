@@ -1,0 +1,11 @@
+{%- liquid
+  assign value_to_copy = shop.url | append: product.url
+  assign id = 'ProductShare-' | append: block.id | append: '-' | append: product.id | append: '-' | append: sectionId
+-%}
+{%- if product != blank -%}
+  <div data-product-block='{{ block.id }}' class='product-general-info-block' {{ block.shopify_attributes }}>
+    <div class='product-share'>
+      {%- render 'share', id: id, value_to_copy: value_to_copy, block: block -%}
+    </div>
+  </div>
+{%- endif -%}

@@ -1,0 +1,84 @@
+{% if block.settings.announcement_text != blank %}
+  {% liquid
+    assign icon_type = block.settings.icon_type
+    assign gradient_type = block.settings.text_color_gradient
+    assign gradients = block.settings.text_color_gradient | replace: ' ', '' | split: 'rgba'
+    assign gradient_degree = 0
+    assign icon_class = 'scrolling-text__icon'
+
+    if gradient_type contains 'radial'
+      assign gradient_degree = block.settings.text_color_gradient | replace: 'radial-gradient(', '' | times: 1
+    else
+      assign gradient_degree = block.settings.text_color_gradient | replace: 'linear-gradient(', '' | times: 1
+    endif
+  %}
+
+  {% capture x1 %}{% if gradient_degree > 230 and gradient_degree < 360 %}1{% else %}0{% endif %}{% endcapture %}
+  {% capture x2 %}{% if gradient_degree > 45 and gradient_degree < 150 or gradient_degree == 360 %}1{% else %}0{% endif %}{% endcapture %}
+  {% capture y1 %}{% if gradient_degree > 0 and gradient_degree < 90 or gradient_degree > 315 and gradient_degree < 360 %}1{% else %}0{% endif %}{% endcapture %}
+  {% capture y2 %}{% if gradient_degree > 90 and gradient_degree < 230 %}1{% else %}0{% endif %}{% endcapture %}
+
+  <scrolling-text-line
+    class='block-{{ block.id }} block-wrapper {% if section.settings.container_size == 'full-screen' %} block-wrapper--full-screen {% endif %} {% if section.settings.section_layout == "crossed" and section.settings.inclination_degree != 0 and section.blocks.size > 1 %} block-wrapper--crossed {% endif %}'
+    {% if block.settings.font_style == 'mixed' %}
+      with-font-mixed
+    {% endif %}
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.link != blank -%}
+      <a
+        href='{{ block.settings.link }}'
+        class='scrolling-text__url'
+        aria-label='{{ block.settings.announcement_text }}'
+        data-scrolling-text-anchor
+      ></a>
+    {%- endif -%}
+
+    <div
+      class='scrolling-text scrolling-text--with-{{ block.settings.font_family }}-font'
+      data-scrolling-text-line
+    >
+      {%- if icon_type == 'custom' and block.settings.custom_icon_image != blank -%}
+        <img
+          {% render 'image-attributes',
+            image: block.settings.custom_icon_image,
+            size: 'small',
+            class: 'scrolling-text__icon'
+          %}
+        >
+      {%- elsif icon_type == 'preset' and block.settings.icon != 'none' -%}
+        <div class='icon-container'>
+          {% if block.settings.text_color_gradient != blank %}
+            <svg class='gradient'>
+              <defs>
+                {% if gradient_type contains 'radial' %}
+                  <radialGradient id='stripes'>
+                      {% for gradient in gradients offset: 1 -%}
+                        {%- assign tags = gradient | replace: '(' | replace: ')', ',' | split: ',' -%}
+                        <stop stop-color='rgba({{ tags[0] }}, {{ tags[1] }}, {{ tags[2] }}, {{ tags[3] }})' offset='{% if tags[4] %}{{ tags[4] }}{% else %}0%{% endif %}' />
+                      {%- endfor %}
+                  </radialGradient>
+                {% else %}
+                  <linearGradient id='stripes' x1='{{ x1 }}' y1='{{ y1 }}' x2='{{ x2 }}' y2='{{ y2 }}'>
+                      {% for gradient in gradients offset: 1 -%}
+                        {%- assign tags = gradient | replace: '(' | replace: ')', ',' | split: ',' -%}
+                        <stop stop-color='rgba({{ tags[0] }}, {{ tags[1] }}, {{ tags[2] }}, {{ tags[3] }})' offset='{% if tags[4] %}{{ tags[4] }}{% else %}0%{% endif %}' />
+                      {%- endfor %}
+                  </linearGradient>
+                {% endif %}
+              </defs>
+            </svg>
+
+            {% assign icon_class = icon_class | append: ' scrolling-text__icon--with-gradient' %}
+          {% endif %}
+
+          {% render 'icon-pack', icon: block.settings.icon, class: icon_class %}
+        </div>
+      {%- endif -%}
+
+      <p class='scrolling-text__text {% if block.settings.font_style == 'outline' %} scrolling-text__text--font-outline {% endif %} {% if block.settings.text_color_gradient != blank %} scrolling-text__text--color-gradient {% endif %}'>
+        {{ block.settings.announcement_text }}
+      </p>
+    </div>
+  </scrolling-text-line>
+{% endif %}

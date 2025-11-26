@@ -1,0 +1,273 @@
+{%- liquid
+  assign options = section.settings
+  assign container_size = options.container_size
+  assign show_separator = options.show_separator
+  assign color_scheme = settings.default_color_scheme
+  if options.color_scheme_variant == 'own'
+    assign color_scheme = options.color_scheme
+  endif
+  assign round_level = options.round_level
+
+  assign height_mode = options.height_mode
+  assign desktop_height = options.desktop_height
+  assign mobile_height = options.mobile_height
+  assign preset_height = options.preset_height
+-%}
+
+{% style %}
+  .section-{{ section.id }} {
+    {% if height_mode == 'custom' %}
+      --gsc-spacer-height: {{ mobile_height }}px;
+    {% else %}
+      --gsc-spacer-height: var(--gsc-padding-block-{{ preset_height }});
+    {% endif %}
+
+    {% if show_separator %}
+      --gsc-spacer-background: var(--gsc-border-color-100);
+    {% endif %}
+  }
+
+  @media {% render 'media-queries', screen: 'md' %} {
+    .section-{{ section.id }} {
+      {% if height_mode == 'custom' %}
+        --gsc-spacer-height: {{ desktop_height }}px;
+      {% endif %}
+    }
+  }
+{% endstyle %}
+
+<div class='spacer {% if round_level != 'default' %}round-level-{{round_level}}{% endif %} spacer--desktop section-{{ section.id }} color-{{ color_scheme }} {% if container_size == 'full-screen' %}section-background{% endif %}'>
+  <div class='spacer__container container container--{{ container_size }} {% if container_size != 'full-screen' %}section-background{% endif %}'>
+    <div class='spacer__separator'></div>
+  </div>
+</div>
+
+<div class='spacer spacer--mobile section-{{ section.id }} section-background color-{{ color_scheme }}'>
+  <div class='spacer__container container container--{{ container_size }}'>
+    <div class='spacer__separator'></div>
+  </div>
+</div>
+
+{% render 'save-section-data-in-global-scope', section: section %}
+
+{% schema %}
+{
+  "name": "Spacer",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "height_mode",
+      "options": [
+        {
+          "value": "preset",
+          "label": "Preset"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "preset",
+      "label": "Height mode"
+    },
+    {
+      "type": "select",
+      "id": "preset_height",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.none"
+        },
+        {
+          "value": "xxxxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxxs"
+        },
+        {
+          "value": "xxxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxs"
+        },
+        {
+          "value": "xxs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxs"
+        },
+        {
+          "value": "xs",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xs"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.s"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.m"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.l"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xl"
+        },
+        {
+          "value": "xxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxl"
+        },
+        {
+          "value": "xxxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxl"
+        },
+        {
+          "value": "xxxxl",
+          "label": "t:sections.general_section_settings.paddings.section_spacing_top.options.xxxxl"
+        }
+      ],
+      "default": "l",
+      "label": "Preset height",
+      "visible_if": "{{ section.settings.height_mode == 'preset' }}"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "min": 2,
+      "max": 200,
+      "step": 2,
+      "default": 200,
+      "unit": "px",
+      "label": "Desktop height",
+      "visible_if": "{{ section.settings.height_mode == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "min": 2,
+      "max": 200,
+      "step": 2,
+      "default": 40,
+      "unit": "px",
+      "label": "Mobile height",
+      "visible_if": "{{ section.settings.height_mode == 'custom' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "default": false,
+      "label": "Show separator"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.general_section_settings.appearance.header_title"
+    },
+    {
+      "type": "select",
+      "id": "container_size",
+      "options": [
+        {
+          "value": "full-screen",
+          "label": "t:sections.general_section_settings.container_size.screen_width_option"
+        },
+        {
+          "value": "page-width",
+          "label": "t:sections.general_section_settings.container_size.page_width_option"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.general_section_settings.container_size.large_width_option"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.general_section_settings.container_size.medium_width_option"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.general_section_settings.container_size.small_width_option"
+        },
+        {
+          "value": "xsmall",
+          "label": "t:sections.general_section_settings.container_size.extra_small_width_option"
+        }
+      ],
+      "default": "full-screen",
+      "label": "t:sections.general_section_settings.container_size.label"
+    },
+    {
+      "type": "select",
+      "id": "round_level",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:settings_schema.appearance.round_level.options.default"
+        },
+        {
+          "value": "0",
+          "label": "t:settings_schema.appearance.round_level.options.option_0"
+        },
+        {
+          "value": "1",
+          "label": "t:settings_schema.appearance.round_level.options.option_1"
+        },
+        {
+          "value": "2",
+          "label": "t:settings_schema.appearance.round_level.options.option_2"
+        },
+        {
+          "value": "3",
+          "label": "t:settings_schema.appearance.round_level.options.option_3"
+        },
+        {
+          "value": "4",
+          "label": "t:settings_schema.appearance.round_level.options.option_4"
+        },
+        {
+          "value": "5",
+          "label": "t:settings_schema.appearance.round_level.options.option_5"
+        },
+        {
+          "value": "6",
+          "label": "t:settings_schema.appearance.round_level.options.option_6"
+        },
+        {
+          "value": "7",
+          "label": "t:settings_schema.appearance.round_level.options.option_7"
+        },
+        {
+          "value": "8",
+          "label": "t:settings_schema.appearance.round_level.options.option_8"
+        }
+      ],
+      "default": "default",
+      "label": "t:settings_schema.appearance.round_level.label"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme_variant",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.default"
+        },
+        {
+          "value": "own",
+          "label": "t:sections.general_section_settings.color_scheme_variant.options.own"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.general_section_settings.color_scheme_variant.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "default": "2",
+      "label": "t:sections.general_section_settings.color_scheme_label",
+      "visible_if": "{{ section.settings.color_scheme_variant == 'own' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spacer"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,57 @@
+{% comment %}
+  Accepts:
+  - dots_count: {Number} total dots (slides) quantity.
+  - visible_dots_count: {Number} 3 or 5. Default: 3.
+  - active_dot_type: {String} "dot" or "line". Default: "dot".
+  - dots_size: {String} s, m, l or xl. Default: m.
+  - dots_color: {String} light or dark. Default: dark.
+  - bg_color: {String} light, dark or none. Default: none.
+  - bg_blur: {Boolean} true, false. Default: false.
+  - custom_class: {String} rewrites default classes.
+{% endcomment %}
+
+{% liquid
+  assign dots_count = dots_count | times: 1
+  assign visible_dots_count = visible_dots_count | times: 1 | default: 3
+  assign active_dot_type = active_dot_type | default: 'dot'
+  assign dots_size = dots_size | default: 'm'
+  assign dots_color = dots_color | default: 'dark'
+  assign bg_color = bg_color | default: 'none'
+  assign bg_blur = bg_blur | default: false
+  assign target = target | default: 'carousel'
+  assign target_selector = target_selector | default: null
+  assign class = class | default: ''
+
+  assign dots = (1..dots_count)
+  if dots_count < visible_dots_count
+    assign visible_dots_count = dots_count
+  endif
+%}
+
+{% if dots_count > 1 %}
+  <{{ target }}-dynamic-dots
+    {% if custom_class != blank %}
+      class='{{ custom_class }}'
+    {% else %}
+      class='{{ class }} dynamic-dots dynamic-dots--dots-{{ dots_color }} {% if bg_color != "none" %}dynamic-dots--bg-{{ bg_color }}{% endif %} {% if dots_size != "m" %}dynamic-dots--size-{{dots_size}}{% endif %} {% if active_dot_type == 'line' %}dynamic-dots--line-type{% endif %} {% if bg_blur %}dynamic-dots--bg-blur{% endif %}'
+    {% endif %}
+    dots-count='{{visible_dots_count}}'
+    style='--gsc-dots-count: {{visible_dots_count}}'
+    {% if target_selector %}
+      data-target-selector='{{ target_selector }}'
+    {% endif %}
+  >
+    <div class='dynamic-dots__wrapper'>
+      <div class='dynamic-dots__track' data-dots-track>
+        {%- for dot in dots -%}
+          <div
+            class='dynamic-dot {% if forloop.index == 1 %}--active{% endif %} {% if forloop.index == visible_dots_count and dots_count > visible_dots_count %}--scrollable{% endif %}'
+            data-dot-index='{{ forloop.index0 }}'
+          >
+            <div class='dynamic-dot__inner'></div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </{{ target }}-dynamic-dots>
+{% endif %}
