@@ -698,7 +698,7 @@
       },
       "primary_custom_colors_and_patterns": {
         "label": "Custom colors and patterns",
-        "info": "Place each rule in a separate line. [Learn how to add color swatches](https://getsitecontrol.gitbook.io/aurora-theme/theme-settings/swatches#custom-colors-and-patterns)"
+        "info": "Place each rule in a separate line. [Learn how to add color swatches](https://github.com/sarif-mia/auroa-neo)"
       },
       "secondary_swatch_options_header": {
         "content": "Secondary options",
@@ -1216,7 +1216,7 @@
       "icon": {
         "label": "Preset icon",
         "info": "Table of icons and labels",
-        "info_with_link": "[Table of icons and labels](https://getsitecontrol.gitbook.io/aurora-theme/tutorials/table-of-icons-and-labels)",
+        "info_with_link": "[Table of icons and labels](https://github.com/sarif-mia/auroa-neo)",
         "none_icon_label": "None",
         "general_group": {
           "label": "General",
@@ -2398,7 +2398,7 @@
       },
       "images_block_name": "Images",
       "images_block_mega_nav_item_name_label": "Link to menu item",
-      "images_block_mega_nav_item_name_info": "Enter the menu item name to link the block to it. Learn about [adding header blocks](https://getsitecontrol.gitbook.io/aurora-theme/header-group/header#link-header-blocks-to-menu-items)",
+      "images_block_mega_nav_item_name_info": "Enter the menu item name to link the block to it. Learn about [adding header blocks](https://github.com/sarif-mia/auroa-neo)",
       "images_block_add_spacing_label": "Add paddings",
       "images_cards_setting_header": "Cards",
       "images_content_setting_header": "Content",
@@ -4405,7 +4405,7 @@
       "label_for_212_column_stack_option_in_layout_setting": "2-1-2 column stack",
       "label_for_enable_image_zoom_setting": "Enable image zoom",
       "label_for_show_only_selected_variants": "Show only selected variant's media",
-      "info_for_show_only_selected_variants": "[Learn how to set up media filtering](https://getsitecontrol.gitbook.io/aurora-theme/tutorials/filter-media-by-variant)",
+      "info_for_show_only_selected_variants": "[Learn how to set up media filtering](https://github.com/sarif-mia/auroa-neo)",
       "label_for_enable_video_looping_setting": "Enable video looping",
       "label_for_enable_video_controls_setting": "Enable video controls",
       "label_for_enable_video_autoplay_setting": "Enable video autoplay",
@@ -4444,10 +4444,10 @@
       "blocks": {
         "siblings": {
           "name": "Product siblings",
-          "description": "Create a rich product page by linking separate products as options. Learn how to [set up product siblings](https://getsitecontrol.gitbook.io/aurora-theme/tutorials/set-up-product-siblings)",
+          "description": "Create a rich product page by linking separate products as options. Learn how to [set up product siblings](https://github.com/sarif-mia/auroa-neo)",
           "swatch_patterns": {
             "label": "Custom colors and patterns",
-            "info": "Place each rule in a separate line. [Learn how to add color swatches](https://getsitecontrol.gitbook.io/aurora-theme/theme-settings/swatches#custom-colors-and-patterns)"
+            "info": "Place each rule in a separate line. [Learn how to add color swatches](https://github.com/sarif-mia/auroa-neo)"
           },
           "swatch_shape": {
             "label": "Shape",
@@ -4954,7 +4954,7 @@
     },
     "popups": {
       "name": "Popups",
-      "description": "Popups are a powerful tool that allows you to promote specific products, grow your mailing list and build relationships with your customers. Select the popup types that work best for your store. Learn about available [popup types.](https://getsitecontrol.gitbook.io/aurora-theme/popup-group/popups)",
+      "description": "Popups are a powerful tool that allows you to promote specific products, grow your mailing list and build relationships with your customers. Select the popup types that work best for your store. Learn about available [popup types.](https://github.com/sarif-mia/auroa-neo)",
       "common": {
         "media": "Media",
         "video": "Video",
@@ -4966,7 +4966,7 @@
         "none": "None",
         "storefront": "Storefront",
         "target_pages": "Target pages",
-        "target_pages_description": "Place each rule in a separate line. [Learn how to set up page targeting.](https://getsitecontrol.gitbook.io/aurora-theme/tutorials/popup-targeting-rules)",
+        "target_pages_description": "Place each rule in a separate line. [Learn how to set up page targeting.](https://github.com/sarif-mia/auroa-neo)",
         "disclaimer": "Disclaimer",
         "discount_code": "Discount code",
         "subheading": "Subheading",
