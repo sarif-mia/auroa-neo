@@ -29,10 +29,6 @@ The theme includes extensive customization options:
 
 For support and documentation, visit the GitHub repository.
 
-## License
-
-This theme is provided as-is for personal and commercial use.
-
 ## Author
 
 Sarif Mia
