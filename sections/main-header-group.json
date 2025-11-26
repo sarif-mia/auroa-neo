@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "header",
   "name": "Header Group",
@@ -9,6 +18,7 @@
           "type": "announcement",
           "settings": {
             "text": "<p>New customers save 10% with the code GET10</p>",
+            "link": "",
             "icon_type": "none",
             "icon": "none"
           }
@@ -17,6 +27,7 @@
           "type": "announcement",
           "settings": {
             "text": "<p>Free shipping on all orders over $150</p>",
+            "link": "",
             "icon_type": "none",
             "icon": "discount-outline"
           }
@@ -25,6 +36,7 @@
           "type": "announcement",
           "settings": {
             "text": "<p>Offering Afterpay, Zippay, Klarna and Youpay</p>",
+            "link": "",
             "icon_type": "none",
             "icon": "credit-card"
           }
@@ -35,6 +47,7 @@
         "announcement-bar-0",
         "ecf45ac4-22bb-4d75-bc18-04f23ccd6b3d"
       ],
+      "disabled": true,
       "settings": {
         "show_only_on_homepage": false,
         "enable_sticky": "none",
@@ -64,6 +77,8 @@
           "settings": {
             "mega_nav_item_name": "Shop",
             "block_visibility": "desktop_and_mobile",
+            "collection": "",
+            "featured_products": [],
             "img_ratio": "portrait",
             "img_ratio_resize": "fill",
             "product_card_align": "left",
@@ -109,24 +124,28 @@
             "item_1_title": "",
             "item_1_text": "<p><strong>S W I M W E A R</strong></p>",
             "item_1_btn_text": "",
+            "item_1_link": "",
             "item_1_btn_style": "solid",
             "show_item_2": true,
             "item_2_media_type": "image",
             "item_2_title": "",
             "item_2_text": "<p><strong>D R E S S E S</strong></p>",
             "item_2_btn_text": "",
+            "item_2_link": "",
             "item_2_btn_style": "solid",
             "show_item_3": true,
             "item_3_media_type": "image",
             "item_3_title": "",
             "item_3_text": "<p><strong>B O T T O M S</strong></p>",
             "item_3_btn_text": "",
+            "item_3_link": "",
             "item_3_btn_style": "solid",
             "show_item_4": true,
             "item_4_media_type": "image",
             "item_4_title": "",
             "item_4_text": "<p><strong>A C T I V E W E A R</strong></p>",
             "item_4_btn_text": "",
+            "item_4_link": "",
             "item_4_btn_style": "solid",
             "show_item_5": false,
             "item_5_media_type": "image",
@@ -198,36 +217,42 @@
             "item_1_title": "Swimwear",
             "item_1_text": "",
             "item_1_btn_text": "",
+            "item_1_link": "",
             "item_1_btn_style": "solid",
             "show_item_2": true,
             "item_2_media_type": "image",
             "item_2_title": "Dresses",
             "item_2_text": "",
             "item_2_btn_text": "",
+            "item_2_link": "",
             "item_2_btn_style": "solid",
             "show_item_3": true,
             "item_3_media_type": "image",
             "item_3_title": "Activewear",
             "item_3_text": "",
             "item_3_btn_text": "",
+            "item_3_link": "",
             "item_3_btn_style": "solid",
             "show_item_4": true,
             "item_4_media_type": "image",
             "item_4_title": "Shirts",
             "item_4_text": "",
             "item_4_btn_text": "",
+            "item_4_link": "",
             "item_4_btn_style": "solid",
             "show_item_5": true,
             "item_5_media_type": "image",
             "item_5_title": "Skirts",
             "item_5_text": "",
             "item_5_btn_text": "",
+            "item_5_link": "",
             "item_5_btn_style": "solid",
             "show_item_6": true,
             "item_6_media_type": "image",
             "item_6_title": "Lingerie",
             "item_6_text": "",
             "item_6_btn_text": "",
+            "item_6_link": "",
             "item_6_btn_style": "solid",
             "show_item_7": false,
             "item_7_media_type": "image",
@@ -258,6 +283,7 @@
             "mega_nav_item_name": "Sale",
             "block_visibility": "desktop_and_mobile",
             "block_layout": "carousel",
+            "collection_list": [],
             "img_ratio": "portrait-xl",
             "text_style": "under-image",
             "heading_size": "h6",
