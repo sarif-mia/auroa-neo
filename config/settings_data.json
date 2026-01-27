@@ -141,6 +141,13 @@
     "show_old_price": true,
     "enable_product_card_multiply": true,
     "content_for_index": [],
+    "blocks": {
+      "1804893150726543839": {
+        "type": "shopify://apps/nova-multi-currency-converter/blocks/app-embed/a5be3c35-cbd0-46a1-ac3a-1ace57a9c1ce",
+        "disabled": false,
+        "settings": {}
+      }
+    },
     "color_schemes": {
       "1": {
         "settings": {
