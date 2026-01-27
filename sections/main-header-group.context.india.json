@@ -11,7 +11,8 @@
   "sections": {
     "header": {
       "settings": {
-        "show_currency_selector": "hide"
+        "show_currency_selector": "hide",
+        "show_currency_flags": false
       },
       "blocks": {}
     }
