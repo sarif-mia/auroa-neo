@@ -338,7 +338,7 @@
         "show_account": true,
         "account_mobile_position": "in_menu",
         "show_language_selector": "hide",
-        "show_currency_selector": "hide",
+        "show_currency_selector": "desktop_and_mobile",
         "show_currency_flags": true,
         "container_size": "page-width",
         "round_level": "default",
