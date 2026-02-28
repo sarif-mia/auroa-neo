@@ -11,291 +11,145 @@
 -%}
 
 {%- if has_size_directions_tag -%}
-  {%- liquid
-    assign color_option_name = 'Color'
-    assign selected_color = product.selected_or_first_available_variant.option1
-    
-    for option in product.options_with_values
-      if option.name == color_option_name
-        assign color_option_index = option.position
-      endif
-    endfor
-    
-    if color_option_index
-      assign color_index = color_option_index | minus: 1
-      assign selected_color = product.selected_or_first_available_variant.options[color_index]
-    endif
-    
-    assign selected_color_down = selected_color | downcase | strip
-    
-    assign size_option_name = 'Size'
-    assign has_size_option = false
-    
-    for option in product.options_with_values
-      if option.name == size_option_name
-        assign has_size_option = true
-      endif
-    endfor
-  -%}
+  <style>
+    .product-size-guide {
+      margin-top: 0.5rem;
+    }
 
-  {%- if has_size_option -%}
-    <div class='product-size-guide' data-product-size-guide>
-      <div class='product-size-guide__content'>
-        <div class='product-size-guide__header'>
-          <h3 class='product-size-guide__title'>SIZE RECOMMENDATION</h3>
-        </div>
-        
-        <div class='product-size-guide__sizes'>
-          {%- assign sizes = '26,28,30,32,34,36' | split: ',' -%}
-          {%- for size in sizes -%}
-            {%- assign size_trim = size | strip -%}
-            {%- assign rec_type = '' -%}
-            {%- assign rec_text = '' -%}
-            {%- assign rec_icon = '' -%}
-            
-            {%- if selected_color_down == 'grey' or selected_color_down == 'light blue' -%}
-              {%- case size_trim -%}
-                {%- when '26' -%}
-                  {%- assign rec_type = 'up' -%}
-                  {%- assign rec_text = 'Size 26 runs small — we suggest going up to size 28.' -%}
-                  {%- assign rec_icon = '↑' -%}
-                {%- when '28' -%}
-                  {%- assign rec_type = 'true' -%}
-                  {%- assign rec_text = 'Size 28 fits true to size.' -%}
-                  {%- assign rec_icon = '●' -%}
-                {%- when '30' -%}
-                  {%- assign rec_type = 'true' -%}
-                  {%- assign rec_text = 'Size 30 fits true to size.' -%}
-                  {%- assign rec_icon = '●' -%}
-                {%- when '32' -%}
-                  {%- assign rec_type = 'up' -%}
-                  {%- assign rec_text = 'Size 32 — we recommend go one size up.' -%}
-                  {%- assign rec_icon = '↑' -%}
-                {%- when '34' -%}
-                  {%- assign rec_type = 'down' -%}
-                  {%- assign rec_text = 'Size 34 runs large — we suggest going down to size 32.' -%}
-                  {%- assign rec_icon = '↓' -%}
-                {%- when '36' -%}
-                  {%- assign rec_type = 'true' -%}
-                  {%- assign rec_text = 'Size 36 fits true to size.' -%}
-                  {%- assign rec_icon = '●' -%}
-              {%- endcase -%}
-            {%- endif -%}
-            
-            <div class='product-size-guide__size-box' data-size='{{ size_trim }}'>
-              <div class='product-size-guide__icon product-size-guide__icon--{{ rec_type }}'>
-                {{ rec_icon }}
-              </div>
-              <div class='product-size-guide__size-number'>{{ size_trim }}</div>
-            </div>
-          {%- endfor -%}
-        </div>
-        
-        <div class='product-size-guide__notification' data-size-notification=''>
-          <div class='product-size-guide__notification-content'></div>
-        </div>
-      </div>
+    .product-variant-picker__pill-list[data-size-recommendations] .pill {
+      position: relative;
+    }
+
+    .product-variant-picker__pill-list[data-size-recommendations] .pill::before {
+      content: attr(data-size-icon);
+      position: absolute;
+      top: -8px;
+      right: -4px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      background: white;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ddd;
+    }
+
+    .product-size-guide__notification {
+      background-color: #fff3cd;
+      padding: 0.75rem;
+      border-left: 4px solid #e74c3c;
+      margin-top: 0.75rem;
+      display: none;
+      animation: slideIn 0.3s ease;
+      border-radius: 3px;
+    }
+
+    .product-size-guide__notification.active {
+      display: block;
+    }
+
+    .product-size-guide__notification-content {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: #333;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+
+  <div class='product-size-guide' data-product-size-guide>
+    <div class='product-size-guide__notification' data-size-notification=''>
+      <div class='product-size-guide__notification-content'></div>
     </div>
+  </div>
 
-    <style>
-      .product-size-guide {
-        margin-top: 1rem;
-        padding: 1rem;
-        background-color: #f9f9f9;
-        border-radius: 6px;
-      }
+  <script>
+    (function() {
+      const productId = '{{ product.id }}';
+      const sectionId = '{{ sectionId }}';
+      
+      function initSizeGuide() {
+        const variantPicker = document.querySelector(`[data-section='${sectionId}'][data-product-id='${productId}']`);
+        if (!variantPicker) return;
 
-      .product-size-guide__content {
-        width: 100%;
-      }
+        const pillLists = variantPicker.querySelectorAll('.product-variant-picker__pill-list');
+        let sizePillList = null;
 
-      .product-size-guide__header {
-        margin-bottom: 0.75rem;
-      }
-
-      .product-size-guide__title {
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        margin: 0;
-        text-transform: uppercase;
-        color: #666;
-      }
-
-      .product-size-guide__sizes {
-        display: flex;
-        gap: 0.3rem;
-        margin-bottom: 0.75rem;
-        flex-wrap: wrap;
-      }
-
-      .product-size-guide__size-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.15rem;
-        cursor: pointer;
-        padding: 0.5rem;
-        border: 2px solid #e0e0e0;
-        border-radius: 4px;
-        min-width: 50px;
-        text-align: center;
-        transition: all 0.3s ease;
-        background: white;
-        flex: 1;
-        min-width: 45px;
-      }
-
-      .product-size-guide__size-box:hover {
-        border-color: #333;
-      }
-
-      .product-size-guide__size-box.active {
-        border-color: #333;
-        background: white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      }
-
-      .product-size-guide__icon {
-        font-size: 0.9rem;
-        height: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-      }
-
-      .product-size-guide__icon--true {
-        color: #333;
-      }
-
-      .product-size-guide__icon--up {
-        color: #e74c3c;
-      }
-
-      .product-size-guide__icon--down {
-        color: #3498db;
-      }
-
-      .product-size-guide__size-number {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #000;
-      }
-
-      .product-size-guide__notification {
-        background-color: #fff3cd;
-        padding: 0.75rem;
-        border-left: 4px solid #e74c3c;
-        margin-top: 0.75rem;
-        display: none;
-        animation: slideIn 0.3s ease;
-        border-radius: 3px;
-      }
-
-      .product-size-guide__notification.active {
-        display: block;
-      }
-
-      .product-size-guide__notification-content {
-        font-size: 0.85rem;
-        line-height: 1.4;
-        color: #333;
-      }
-
-      @keyframes slideIn {
-        from {
-          opacity: 0;
-          transform: translateY(-5px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @media (max-width: 480px) {
-        .product-size-guide {
-          margin-top: 0.75rem;
-          padding: 0.75rem;
-        }
-
-        .product-size-guide__size-box {
-          min-width: 40px;
-          padding: 0.4rem;
-        }
-
-        .product-size-guide__icon {
-          font-size: 0.8rem;
-        }
-
-        .product-size-guide__size-number {
-          font-size: 0.75rem;
-        }
-      }
-    </style>
-
-    <script>
-      (function() {
-        const sizeGuide = document.querySelector('[data-product-size-guide]');
-        if (!sizeGuide) return;
-
-        const sizeBoxes = sizeGuide.querySelectorAll('.product-size-guide__size-box');
-        const notification = sizeGuide.querySelector('[data-size-notification]');
-        const notificationContent = notification.querySelector('.product-size-guide__notification-content');
-
-        const sizeRecommendations = {
-          '26': { type: 'up', text: 'Size 26 runs small — we suggest going up to size 28.' },
-          '28': { type: 'true', text: 'Size 28 fits true to size.' },
-          '30': { type: 'true', text: 'Size 30 fits true to size.' },
-          '32': { type: 'up', text: 'Size 32 — we recommend go one size up.' },
-          '34': { type: 'down', text: 'Size 34 runs large — we suggest going down to size 32.' },
-          '36': { type: 'true', text: 'Size 36 fits true to size.' }
-        };
-
-        function initSizeGuide() {
-          sizeBoxes.forEach(box => {
-            box.addEventListener('click', function() {
-              const size = this.dataset.size;
-              const rec = sizeRecommendations[size];
-              
-              if (rec) {
-                sizeBoxes.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                
-                if (rec.text) {
-                  notificationContent.textContent = rec.text;
-                  notification.classList.add('active');
-                }
-              }
-            });
-          });
-
-          // Show default recommendation for size 28 on load
-          const defaultSize = sizeGuide.querySelector('.product-size-guide__size-box[data-size="28"]');
-          if (defaultSize) {
-            defaultSize.click();
-          }
-        }
-
-        // Wait for DOM to be ready
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initSizeGuide);
-        } else {
-          initSizeGuide();
-        }
-
-        // Listen for size radio button changes
-        document.addEventListener('change', function(e) {
-          if (e.target && e.target.name && e.target.name.toLowerCase().includes('size')) {
-            const size = e.target.value;
-            const sizeBox = sizeGuide.querySelector('[data-size="' + size + '"]');
-            if (sizeBox) {
-              sizeBox.click();
+        // Find the Size option pill list
+        for (let list of pillLists) {
+          const labels = list.parentElement.querySelectorAll('.product-variant-picker__option-label span');
+          for (let label of labels) {
+            if (label.textContent.toLowerCase() === 'size') {
+              sizePillList = list;
+              break;
             }
           }
+        }
+
+        if (!sizePillList) return;
+
+        // Add data attribute to size pill list
+        sizePillList.setAttribute('data-size-recommendations', 'true');
+
+        const sizeRecommendations = {
+          '26': { icon: '↑', text: 'Size 26 runs small — we suggest going up to size 28.' },
+          '28': { icon: '●', text: 'Size 28 fits true to size.' },
+          '30': { icon: '●', text: 'Size 30 fits true to size.' },
+          '32': { icon: '↑', text: 'Size 32 — we recommend go one size up.' },
+          '34': { icon: '↓', text: 'Size 34 runs large — we suggest going down to size 32.' },
+          '36': { icon: '●', text: 'Size 36 fits true to size.' }
+        };
+
+        const pills = sizePillList.querySelectorAll('.pill');
+        const notification = document.querySelector('[data-size-notification]');
+        const notificationContent = notification.querySelector('.product-size-guide__notification-content');
+
+        pills.forEach(pill => {
+          const label = pill.querySelector('.pill__label');
+          const size = label ? label.textContent.trim() : '';
+          const rec = sizeRecommendations[size];
+
+          if (rec) {
+            pill.setAttribute('data-size-icon', rec.icon);
+
+            pill.addEventListener('click', function() {
+              if (rec.text) {
+                notificationContent.textContent = rec.text;
+                notification.classList.add('active');
+              }
+            });
+          }
         });
-      })();
-    </script>
-  {%- endif -%}
+
+        // Show default for first selected
+        const selectedPill = sizePillList.querySelector('.pill.selected');
+        if (selectedPill) {
+          selectedPill.click();
+        } else if (pills.length > 0) {
+          pills[0].click();
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initSizeGuide);
+      } else {
+        initSizeGuide();
+      }
+
+      // Re-init on variant change
+      document.addEventListener('variant-changed', initSizeGuide);
+    })();
+  </script>
 {%- endif -%}
