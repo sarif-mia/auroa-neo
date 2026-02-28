@@ -1,0 +1,270 @@
+{%- liquid
+  assign product_tags = product.tags
+  assign has_size_directions_tag = false
+  
+  for tag in product_tags
+    if tag == 'size-directions'
+      assign has_size_directions_tag = true
+      break
+    endif
+  endfor
+-%}
+
+{%- if has_size_directions_tag -%}
+  {%- liquid
+    assign color_option_name = 'Color'
+    assign selected_color = product.selected_or_first_available_variant.option1
+    
+    for option in product.options_with_values
+      if option.name == color_option_name
+        assign color_option_index = option.position
+      endif
+    endfor
+    
+    if color_option_index
+      assign selected_color = product.selected_or_first_available_variant.options[color_option_index | minus: 1]
+    endif
+    
+    assign selected_color_down = selected_color | downcase | strip
+  -%}
+
+  <div class='product-size-guide' data-product-size-guide>
+    <div class='product-size-guide__header'>
+      <h3 class='product-size-guide__title'>SIZE GUIDE</h3>
+    </div>
+    
+    <div class='product-size-guide__sizes'>
+      {%- assign sizes = '26,28,30,32,34,36' | split: ',' -%}
+      {%- for size in sizes -%}
+        {%- assign size_trim = size | strip -%}
+        {%- assign rec_type = '' -%}
+        {%- assign rec_text = '' -%}
+        {%- assign rec_icon = '' -%}
+        
+        {%- if selected_color_down == 'grey' or selected_color_down == 'light blue' -%}
+          {%- case size_trim -%}
+            {%- when '26' -%}
+              {%- assign rec_type = 'up' -%}
+              {%- assign rec_text = 'Size 26 runs small — we suggest going up to size 28.' -%}
+              {%- assign rec_icon = '↑' -%}
+            {%- when '28' -%}
+              {%- assign rec_type = 'true' -%}
+              {%- assign rec_text = 'Size 28 fits true to size.' -%}
+              {%- assign rec_icon = '●' -%}
+            {%- when '30' -%}
+              {%- assign rec_type = 'true' -%}
+              {%- assign rec_text = 'Size 30 fits true to size.' -%}
+              {%- assign rec_icon = '●' -%}
+            {%- when '32' -%}
+              {%- assign rec_type = 'up' -%}
+              {%- assign rec_text = 'Size 32 — we recommend go one size up.' -%}
+              {%- assign rec_icon = '↑' -%}
+            {%- when '34' -%}
+              {%- assign rec_type = 'down' -%}
+              {%- assign rec_text = 'Size 34 runs large — we suggest going down to size 32.' -%}
+              {%- assign rec_icon = '↓' -%}
+            {%- when '36' -%}
+              {%- assign rec_type = 'true' -%}
+              {%- assign rec_text = 'Size 36 fits true to size.' -%}
+              {%- assign rec_icon = '●' -%}
+          {%- endcase -%}
+        {%- endif -%}
+        
+        <div class='product-size-guide__size-box' data-size='{{ size_trim }}'>
+          <div class='product-size-guide__icon product-size-guide__icon--{{ rec_type }}'>
+            {{ rec_icon }}
+          </div>
+          <div class='product-size-guide__size-number'>{{ size_trim }}</div>
+        </div>
+      {%- endfor -%}
+    </div>
+    
+    <div class='product-size-guide__notification' data-size-notification=''>
+      <div class='product-size-guide__notification-content'></div>
+    </div>
+  </div>
+
+  <style>
+    .product-size-guide {
+      margin-bottom: var(--gsc-spacing-unit);
+      margin-top: var(--gsc-spacing-unit);
+    }
+
+    .product-size-guide__header {
+      margin-bottom: 1rem;
+    }
+
+    .product-size-guide__title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .product-size-guide__sizes {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .product-size-guide__size-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      cursor: pointer;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 4px;
+      min-width: 60px;
+      text-align: center;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .product-size-guide__size-box:hover {
+      border-color: #333;
+      transform: translateY(-2px);
+    }
+
+    .product-size-guide__size-box.active {
+      border-color: #333;
+      background: #f9f9f9;
+    }
+
+    .product-size-guide__icon {
+      font-size: 1.25rem;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .product-size-guide__icon--true {
+      color: #333;
+    }
+
+    .product-size-guide__icon--up {
+      color: #e74c3c;
+    }
+
+    .product-size-guide__icon--down {
+      color: #3498db;
+    }
+
+    .product-size-guide__size-number {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .product-size-guide__notification {
+      background-color: #f5f5f5;
+      padding: 1rem;
+      border-left: 4px solid #333;
+      margin-top: 1rem;
+      display: none;
+      animation: slideIn 0.3s ease;
+    }
+
+    .product-size-guide__notification.active {
+      display: block;
+    }
+
+    .product-size-guide__notification-content {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: #333;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .product-size-guide__size-box {
+        min-width: 50px;
+        padding: 0.5rem;
+      }
+
+      .product-size-guide__icon {
+        font-size: 1rem;
+      }
+
+      .product-size-guide__size-number {
+        font-size: 0.875rem;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      const sizeGuide = document.querySelector('[data-product-size-guide]');
+      if (!sizeGuide) return;
+
+      const sizeBoxes = sizeGuide.querySelectorAll('.product-size-guide__size-box');
+      const notification = sizeGuide.querySelector('[data-size-notification]');
+      const notificationContent = notification.querySelector('.product-size-guide__notification-content');
+
+      const sizeRecommendations = {
+        '26': { type: 'up', text: 'Size 26 runs small — we suggest going up to size 28.' },
+        '28': { type: 'true', text: 'Size 28 fits true to size.' },
+        '30': { type: 'true', text: 'Size 30 fits true to size.' },
+        '32': { type: 'up', text: 'Size 32 — we recommend go one size up.' },
+        '34': { type: 'down', text: 'Size 34 runs large — we suggest going down to size 32.' },
+        '36': { type: 'true', text: 'Size 36 fits true to size.' }
+      };
+
+      function initSizeGuide() {
+        sizeBoxes.forEach(box => {
+          box.addEventListener('click', function() {
+            const size = this.dataset.size;
+            const rec = sizeRecommendations[size];
+            
+            if (rec) {
+              sizeBoxes.forEach(b => b.classList.remove('active'));
+              this.classList.add('active');
+              
+              if (rec.text) {
+                notificationContent.textContent = rec.text;
+                notification.classList.add('active');
+              }
+            }
+          });
+        });
+
+        // Show default recommendation for size 28 on load
+        const defaultSize = sizeGuide.querySelector('.product-size-guide__size-box[data-size="28"]');
+        if (defaultSize) {
+          defaultSize.click();
+        }
+      }
+
+      // Wait a bit to ensure variant picker is loaded
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initSizeGuide);
+      } else {
+        initSizeGuide();
+      }
+
+      // Listen for variant changes
+      document.addEventListener('variant-changed', function(e) {
+        // Re-initialize on variant change if needed
+        const defaultSize = sizeGuide.querySelector('.product-size-guide__size-box[data-size="28"]');
+        if (defaultSize) {
+          defaultSize.click();
+        }
+      });
+    })();
+  </script>
+{%- endif -%}
