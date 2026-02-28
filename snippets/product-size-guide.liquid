@@ -109,15 +109,44 @@
 
   <script>
     (function() {
-      // Function to get current color
-      function getCurrentColor() {
-        const variantPicker = document.querySelector('[data-product-id="{{ product.id }}"]');
-        if (!variantPicker) return '';
+      // Prepare product options and identify the color option index
+      const PRODUCT_OPTIONS = {{ product.options | json }};
+      const COLOR_OPTION_INDEX = PRODUCT_OPTIONS.findIndex(opt => opt.toLowerCase().includes('color'));
 
-        // Look for color option in the variant picker
-        const colorLabels = variantPicker.querySelectorAll('[option-picker-name="Color"] .pill.selected .pill__label');
-        if (colorLabels.length > 0) {
-          return colorLabels[0].textContent.trim().toLowerCase();
+      // Function to get current color value
+      function getCurrentColor() {
+        // First try by reading the selected variant JSON embedded in the picker
+        const variantJsonEl = document.querySelector(
+          `[data-section='${sectionId}'][data-product-id='${productId}'] [data-selected-variant-json]`
+        );
+
+        if (variantJsonEl) {
+          try {
+            const variantData = JSON.parse(variantJsonEl.textContent);
+            if (COLOR_OPTION_INDEX !== -1 && variantData.options) {
+              const colorValue = variantData.options[COLOR_OPTION_INDEX] || '';
+              return String(colorValue).toLowerCase();
+            }
+          } catch (err) {
+            console.error('Size guide: failed to parse variant JSON', err);
+          }
+        }
+
+        // Fallback: scan the DOM for a selected pill whose parent option name contains "color"
+        const variantPicker = document.querySelector(`[data-product-id="{{ product.id }}"]`);
+        if (variantPicker) {
+          const labels = variantPicker.querySelectorAll('[option-picker-name] .pill.selected .pill__label');
+          for (let lbl of labels) {
+            const parent = lbl.closest('[option-picker-name]');
+            if (parent && parent.getAttribute('option-picker-name').toLowerCase().includes('color')) {
+              return lbl.textContent.trim().toLowerCase();
+            }
+          }
+          // last resort: checked input
+          const checkedInput = variantPicker.querySelector("input[type=radio]:checked[name*='Color']");
+          if (checkedInput) {
+            return checkedInput.value.toLowerCase();
+          }
         }
 
         return '';
