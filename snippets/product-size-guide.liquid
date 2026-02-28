@@ -30,92 +30,37 @@
 <script>
 (function(){
 
-
-const SIZE_RULES = {
-  black: {
-    default: "● Fits true to size."
-  },
-
-  "mid blue": {
-    default: "↑ We recommend going one size up."
-  },
-
-  grey: {
-    "32": "↑ Size 32 — go one size up.",
-    default: "● Fits true to size."
-  },
-
-  "light blue": {
-    "32": "↑ Size 32 — go one size up.",
-    default: "● Fits true to size."
-  },
-
-  default: {
-    "26": "↑ Runs small — go up one size.",
-    "34": "↓ Runs large — go down one size.",
-    default: "● Fits true to size."
-  }
+const SIZE_RULES={
+  black:{default:"● Fits true to size."},
+  "mid blue":{default:"↑ We recommend going one size up."},
+  grey:{"32":"↑ Size 32 — go one size up.",default:"● Fits true to size."},
+  "light blue":{"32":"↑ Size 32 — go one size up.",default:"● Fits true to size."},
+  default:{"26":"↑ Runs small — go up one size.","34":"↓ Runs large — go down one size.",default:"● Fits true to size."}
 };
 
-
-// helper to read selected option value
-
-function getSelected(optionName){
-  const el = document.querySelector(
-    `[option-picker-name*="${optionName}"] .pill.selected .pill__label`
-  );
-  return el ? el.textContent.trim().toLowerCase() : '';
+function getSelected(name){
+  const el=document.querySelector(`[option-picker-name*="${name}"] .pill.selected .pill__label`);
+  return el?el.textContent.trim().toLowerCase():"";
 }
 
-
-// pick the correct message for color/size
-
-function getMessage(color, size){
-  let rule = SIZE_RULES.default;
-
-  Object.keys(SIZE_RULES).forEach(key=>{
-    if(color.includes(key)){
-      rule = SIZE_RULES[key];
-    }
-  });
-
-  return rule[size] || rule.default;
+function getMessage(c,s){
+  let r=SIZE_RULES.default;
+  for(const k in SIZE_RULES) if(c.includes(k)) r=SIZE_RULES[k];
+  return r[s]||r.default;
 }
-
-
-// refresh the note text
 
 function updateSizeNote(){
-  const color = getSelected('Color');
-  const size  = getSelected('Size');
-  const note  = document.getElementById('sizeNote');
-
-  if(!size || !note) return;
-
-  const message = getMessage(color, size);
-
-  note.innerHTML = `<strong>Size ${size}</strong> — ${message}`;
+  const color=getSelected('Color');
+  const size=getSelected('Size');
+  const note=document.getElementById('sizeNote');
+  if(!size||!note) return;
+  note.innerHTML=`<strong>Size ${size}</strong> — ${getMessage(color,size)}`;
   note.classList.add('active');
 }
 
-
-// wire up events
-
-document.addEventListener('variant-changed', function(){
-  updateSizeNote();
-});
-
-/* Pill click fallback */
-document.addEventListener('click', function(e){
-  if(e.target.closest('.pill')){
-    setTimeout(updateSizeNote, 0);
-  }
-});
-
-/* Initial load */
-document.addEventListener('DOMContentLoaded', function(){
-  setTimeout(updateSizeNote, 200);
-});
+document.addEventListener('variant-changed',updateSizeNote);
+document.addEventListener('click',e=>{if(e.target.closest('.pill'))updateSizeNote();});
+document.addEventListener('DOMContentLoaded',updateSizeNote);
 
 })();
 </script>
