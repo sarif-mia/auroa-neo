@@ -24,13 +24,13 @@
     [data-size-recommendations] .pill::before {
       content: attr(data-size-icon);
       position: absolute;
-      top: -10px;
-      right: -6px;
+      top: -12px;
+      right: 0px;
       font-size: 0.85rem;
       font-weight: 700;
       background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -38,11 +38,17 @@
       border: 2px solid #e5e5e5;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+    }
+
+    [data-size-recommendations] .pill:hover {
+      transform: translateY(-2px);
     }
 
     [data-size-recommendations] .pill:hover::before {
-      border-color: #999;
+      border-color: #666;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+      transform: scale(1.1);
     }
 
     [data-size-recommendations] .pill[data-size-icon="●"]::before {
@@ -58,7 +64,7 @@
     }
 
     .product-size-guide {
-      margin-top: 0.75rem;
+      margin-top: 1rem;
       margin-bottom: 0;
     }
 
@@ -83,6 +89,7 @@
       line-height: 1.5;
       color: #2c3e50;
       font-weight: 500;
+      margin: 0;
     }
 
     @keyframes notificationSlide {
@@ -98,10 +105,9 @@
 
     @media (max-width: 768px) {
       [data-size-recommendations] .pill::before {
-        top: -8px;
-        right: -4px;
-        width: 20px;
-        height: 20px;
+        top: -10px;
+        width: 22px;
+        height: 22px;
         font-size: 0.8rem;
         border-width: 1.5px;
       }
@@ -142,7 +148,10 @@
           `[data-section='${sectionId}'][data-product-id='${productId}']`
         );
         
-        if (!variantPicker) return null;
+        if (!variantPicker) {
+          console.log('Variant picker not found');
+          return null;
+        }
 
         const allPillLists = variantPicker.querySelectorAll('.product-variant-picker__pill-list');
         
@@ -160,17 +169,30 @@
         return null;
       }
 
+      function updateNotification(text) {
+        const notification = document.querySelector('[data-size-notification]');
+        const notificationContent = notification?.querySelector('.product-size-guide__notification-content');
+        
+        if (notificationContent) {
+          notificationContent.textContent = text;
+          if (notification) {
+            notification.classList.add('active');
+          }
+        }
+      }
+
       function applySizeRecommendations(sizePillList) {
-        if (!sizePillList) return;
+        if (!sizePillList) {
+          console.log('Size pill list not found');
+          return;
+        }
 
         // Mark the list for styling
         sizePillList.setAttribute('data-size-recommendations', 'true');
 
         const pills = sizePillList.querySelectorAll('.pill');
-        const notification = document.querySelector('[data-size-notification]');
-        const notificationContent = notification?.querySelector('.product-size-guide__notification-content');
-
-        pills.forEach(pill => {
+        
+        pills.forEach((pill, index) => {
           const label = pill.querySelector('.pill__label');
           const sizeText = label?.textContent.trim() || '';
           const recommendation = SIZE_RECOMMENDATIONS[sizeText];
@@ -179,24 +201,29 @@
             // Set data attribute for icon styling
             pill.setAttribute('data-size-icon', recommendation.icon);
 
-            // Add click handler
-            pill.addEventListener('click', function() {
-              if (notificationContent) {
-                notificationContent.textContent = recommendation.text;
-                if (notification) {
-                  notification.classList.add('active');
-                }
-              }
-            }, { once: false });
+            // Remove old click listeners by cloning
+            const newPill = pill.cloneNode(true);
+            pill.parentNode.replaceChild(newPill, pill);
+
+            // Add click handler to new pill
+            newPill.addEventListener('click', (e) => {
+              e.stopPropagation();
+              updateNotification(recommendation.text);
+            });
           }
         });
 
         // Trigger initial recommendation
-        const selectedPill = sizePillList.querySelector('.pill.selected');
+        const updatedList = document.querySelector('[data-size-recommendations="true"]');
+        const selectedPill = updatedList?.querySelector('.pill.selected');
+        
         if (selectedPill) {
           selectedPill.click();
-        } else if (pills.length > 0) {
-          pills[0].click();
+        } else {
+          const firstPill = updatedList?.querySelector('.pill');
+          if (firstPill) {
+            firstPill.click();
+          }
         }
       }
 
@@ -209,14 +236,32 @@
 
       // Initialize when DOM is ready
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initSizeGuide);
+        document.addEventListener('DOMContentLoaded', () => {
+          setTimeout(initSizeGuide, 100);
+        });
       } else {
-        // Use requestAnimationFrame for better timing
-        requestAnimationFrame(initSizeGuide);
+        // Use setTimeout to ensure DOM elements are ready
+        setTimeout(initSizeGuide, 100);
       }
 
       // Re-initialize on variant changes
-      document.addEventListener('variant-changed', initSizeGuide);
+      document.addEventListener('variant-changed', () => {
+        setTimeout(initSizeGuide, 50);
+      });
+
+      // Also listen for form changes
+      document.addEventListener('change', (e) => {
+        if (e.target && e.target.name && e.target.name.includes('Size')) {
+          const sizePillList = findSizePillList();
+          if (sizePillList) {
+            const sizeValue = e.target.value;
+            const recommendation = SIZE_RECOMMENDATIONS[sizeValue];
+            if (recommendation) {
+              updateNotification(recommendation.text);
+            }
+          }
+        }
+      });
     })();
   </script>
 {%- endif -%}
