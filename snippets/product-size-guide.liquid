@@ -143,11 +143,22 @@
           '36': { icon: '↑', text: 'Size 36 — we recommend going one size up.' }
         };
 
+        const greyLightBlueRecommendations = {
+          '26': { icon: '●', text: 'Size 26 fits true to size.' },
+          '28': { icon: '●', text: 'Size 28 fits true to size.' },
+          '30': { icon: '●', text: 'Size 30 fits true to size.' },
+          '32': { icon: '↑', text: 'Size 32 — we recommend going one size up.' },
+          '34': { icon: '●', text: 'Size 34 fits true to size.' },
+          '36': { icon: '●', text: 'Size 36 fits true to size.' }
+        };
+
         // Check color and return appropriate recommendations
         if (color.includes('black')) {
           return baseRecommendations;
         } else if (color.includes('mid blue')) {
           return midBlueRecommendations;
+        } else if (color.includes('grey') || color.includes('light blue')) {
+          return greyLightBlueRecommendations;
         }
 
         // Default recommendations for other colors
