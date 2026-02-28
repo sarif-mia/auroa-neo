@@ -1,16 +1,25 @@
 {%- if product.tags contains 'size-directions' -%}
 
 <style>
-.product-size-guide__notification{
-  background:#f2f2f2;
-  padding:12px;
-  margin-top:12px;
-  border-left:3px solid #000;
-  display:none;
-  font-size:14px;
+.product-size-guide{
+  margin-top:15px;
 }
+
+.product-size-guide__notification{
+  background:#f5f5f5;
+  padding:14px;
+  border-left:4px solid #000;
+  font-size:14px;
+  display:none;
+  transition:all .2s ease;
+}
+
 .product-size-guide__notification.active{
   display:block;
+}
+
+.product-size-guide__notification strong{
+  font-weight:600;
 }
 </style>
 
@@ -21,78 +30,103 @@
 <script>
 (function(){
 
-const productId = '{{ product.id }}';
-const sectionId = '{{ sectionId }}';
+/* =========================
+   SIZE RULE CONFIG
+   ========================= */
 
 const SIZE_RULES = {
   black: {
     default: "● Fits true to size."
   },
+
   "mid blue": {
     default: "↑ We recommend going one size up."
   },
+
   grey: {
-    "32": "↑ Size 32 – go one size up.",
+    "32": "↑ Size 32 — go one size up.",
     default: "● Fits true to size."
   },
+
   "light blue": {
-    "32": "↑ Size 32 – go one size up.",
+    "32": "↑ Size 32 — go one size up.",
     default: "● Fits true to size."
   },
+
   default: {
-    "26": "↑ Runs small – go up.",
-    "34": "↓ Runs large – go down.",
+    "26": "↑ Runs small — go up one size.",
+    "34": "↓ Runs large — go down one size.",
     default: "● Fits true to size."
   }
 };
 
-function getSelectedValue(optionName){
-  const wrapper = document.querySelector(
-    `[data-section='${sectionId}'][data-product-id='${productId}']`
-  );
-  if(!wrapper) return '';
 
-  const selected = wrapper.querySelector(
+/* =========================
+   GET SELECTED VALUE
+   ========================= */
+
+function getSelected(optionName){
+  const el = document.querySelector(
     `[option-picker-name*="${optionName}"] .pill.selected .pill__label`
   );
-  return selected ? selected.textContent.trim().toLowerCase() : '';
+  return el ? el.textContent.trim().toLowerCase() : '';
 }
 
+
+/* =========================
+   GET MESSAGE BASED ON RULE
+   ========================= */
+
 function getMessage(color, size){
-  color = color.toLowerCase();
   let rule = SIZE_RULES.default;
 
   Object.keys(SIZE_RULES).forEach(key=>{
-    if(color.includes(key)) rule = SIZE_RULES[key];
+    if(color.includes(key)){
+      rule = SIZE_RULES[key];
+    }
   });
 
   return rule[size] || rule.default;
 }
 
-function updateNote(){
-  const color = getSelectedValue('Color');
-  const size = getSelectedValue('Size');
-  const note = document.getElementById('sizeNote');
 
-  if(!size) return;
+/* =========================
+   UPDATE UI
+   ========================= */
+
+function updateSizeNote(){
+  const color = getSelected('Color');
+  const size  = getSelected('Size');
+  const note  = document.getElementById('sizeNote');
+
+  if(!size || !note) return;
 
   const message = getMessage(color, size);
-  note.innerHTML = `<strong>${size}</strong> — ${message}`;
+
+  note.innerHTML = `<strong>Size ${size}</strong> — ${message}`;
   note.classList.add('active');
 }
 
+
+/* =========================
+   EVENT LISTENERS
+   ========================= */
+
+/* Aurora custom variant event */
+document.addEventListener('variant-changed', function(){
+  updateSizeNote();
+});
+
+/* Pill click fallback */
 document.addEventListener('click', function(e){
   if(e.target.closest('.pill')){
-    setTimeout(updateNote, 100);
+    setTimeout(updateSizeNote, 50);
   }
 });
 
-document.addEventListener('variant-changed', function(){
-  setTimeout(updateNote, 100);
-});
-
+/* Initial load */
 document.addEventListener('DOMContentLoaded', function(){
-  setTimeout(updateNote, 200);
+  setTimeout(updateSizeNote, 200);
 });
 
 })();
