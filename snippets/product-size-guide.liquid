@@ -1,94 +1,98 @@
 {%- if product.tags contains 'size-directions' -%}
 
 <style>
-.product-size-guide{
-  margin-top:15px;
-}
-
 .product-size-guide__notification{
-  background:#f5f5f5;
-  padding:14px;
-  border-left:4px solid #000;
-  font-size:14px;
-  display:none;
-  transition:all .2s ease;
+  margin-top:1rem;padding:1rem;background:#e8e8e8;
+  border-left:4px solid #333;display:none
 }
-
-.product-size-guide__notification.active{
-  display:block;
-}
-
-.product-size-guide__notification strong{
-  font-weight:600;
+.product-size-guide__notification.active{display:block}
+.product-size-guide__notification-content{
+  display:flex;gap:10px;align-items:center;font-size:.9rem
 }
 </style>
 
 <div class="product-size-guide">
-  <div class="product-size-guide__notification" id="sizeNote"></div>
+  <div class="product-size-guide__notification" data-size-note>
+    <div class="product-size-guide__notification-content"></div>
+  </div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
+(function(){
 
-const SIZE_RULES = {
-  black:{default:"● Fits true to size."},
-  "mid blue":{default:"↑ We recommend going one size up."},
-  grey:{"32":"↑ Size 32 — go one size up.",default:"● Fits true to size."},
-  "light blue":{"32":"↑ Size 32 — go one size up.",default:"● Fits true to size."},
-  default:{
-    "26":"↑ Runs small — go up one size.",
-    "34":"↓ Runs large — go down one size.",
-    default:"● Fits true to size."
-  }
-};
+const productId = '{{ product.id }}';
+const sectionId = '{{ sectionId }}';
+const OPTIONS = {{ product.options | json }};
+const COLOR_INDEX = OPTIONS.findIndex(o=>o.toLowerCase().includes('color'));
 
-function getSelectedOption(optionName){
-  const fieldsets = document.querySelectorAll("fieldset");
-
-  for (let field of fieldsets){
-    if(field.querySelector("legend")?.textContent.toLowerCase().includes(optionName.toLowerCase())){
-      const checked = field.querySelector("input:checked");
-      if(checked){
-        return checked.value.trim().toLowerCase();
-      }
-    }
-  }
-  return "";
+function getColor(){
+  const variantJson = document.querySelector(
+    `[data-section='${sectionId}'][data-product-id='${productId}'] [data-selected-variant-json]`
+  );
+  if(!variantJson) return '';
+  try{
+    const v = JSON.parse(variantJson.textContent);
+    return (v.options[COLOR_INDEX] || '').toLowerCase();
+  }catch{return ''}
 }
 
-function getMessage(color,size){
-  let rules = SIZE_RULES.default;
+function getRecommendation(color,size){
+  if(color.includes('mid blue'))
+    return {icon:'↑',text:`Size ${size} — go one size up.`};
 
-  for(const key in SIZE_RULES){
-    if(color.includes(key)){
-      rules = SIZE_RULES[key];
-      break;
-    }
-  }
+  if(color.includes('grey')||color.includes('light blue'))
+    return size==='32'
+      ? {icon:'↑',text:'Size 32 — go one size up.'}
+      : {icon:'●',text:`Size ${size} fits true to size.`};
 
-  return rules[size] || rules.default;
+  if(color.includes('black'))
+    return {icon:'●',text:`Size ${size} fits true to size.`};
+
+  // default
+  if(size==='26') return {icon:'↑',text:'Size 26 — go up to 28.'};
+  if(size==='34') return {icon:'↓',text:'Size 34 — go down to 32.'};
+
+  return {icon:'●',text:`Size ${size} fits true to size.`};
 }
 
-function updateSizeNote(){
-  const color = getSelectedOption("color");
-  const size = getSelectedOption("size");
-  const note = document.getElementById("sizeNote");
-
-  if(!size || !note) return;
-
-  note.innerHTML = `<strong>Size ${size}</strong> — ${getMessage(color,size)}`;
-  note.classList.add("active");
+function showNote(data){
+  const box=document.querySelector('[data-size-note]');
+  const content=box?.querySelector('.product-size-guide__notification-content');
+  if(!box||!content)return;
+  content.innerHTML=`<strong>${data.icon}</strong> ${data.text}`;
+  box.classList.add('active');
 }
 
-/* Detect Variant Change Automatically */
-document.querySelectorAll("input[type='radio']").forEach(input=>{
-  input.addEventListener("change", updateSizeNote);
-});
+function init(){
+  const wrapper=document.querySelector(
+    `[data-section='${sectionId}'][data-product-id='${productId}']`
+  );
+  if(!wrapper)return;
 
-/* Initial Load */
-updateSizeNote();
+  const sizeList=[...wrapper.querySelectorAll('.product-variant-picker__pill-list')]
+    .find(l=>l.parentElement.innerText.toLowerCase().includes('size'));
 
-});
+  if(!sizeList)return;
+
+  const color=getColor();
+
+  sizeList.querySelectorAll('.pill').forEach(pill=>{
+    const size=pill.innerText.trim();
+    pill.onclick=()=>{
+      const data=getRecommendation(color,size);
+      showNote(data);
+    };
+  });
+
+  // auto trigger selected
+  const selected=sizeList.querySelector('.pill.selected')||sizeList.querySelector('.pill');
+  if(selected) selected.click();
+}
+
+document.addEventListener('DOMContentLoaded',()=>setTimeout(init,100));
+document.addEventListener('variant-changed',()=>setTimeout(init,50));
+
+})();
 </script>
 
 {%- endif -%}
