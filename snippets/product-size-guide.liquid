@@ -28,41 +28,67 @@
 </div>
 
 <script>
-(function(){
+document.addEventListener("DOMContentLoaded", function(){
 
-const SIZE_RULES={
+const SIZE_RULES = {
   black:{default:"● Fits true to size."},
   "mid blue":{default:"↑ We recommend going one size up."},
   grey:{"32":"↑ Size 32 — go one size up.",default:"● Fits true to size."},
   "light blue":{"32":"↑ Size 32 — go one size up.",default:"● Fits true to size."},
-  default:{"26":"↑ Runs small — go up one size.","34":"↓ Runs large — go down one size.",default:"● Fits true to size."}
+  default:{
+    "26":"↑ Runs small — go up one size.",
+    "34":"↓ Runs large — go down one size.",
+    default:"● Fits true to size."
+  }
 };
 
-function getSelected(name){
-  const el=document.querySelector(`[option-picker-name*="${name}"] .pill.selected .pill__label`);
-  return el?el.textContent.trim().toLowerCase():"";
+function getSelectedOption(optionName){
+  const fieldsets = document.querySelectorAll("fieldset");
+
+  for (let field of fieldsets){
+    if(field.querySelector("legend")?.textContent.toLowerCase().includes(optionName.toLowerCase())){
+      const checked = field.querySelector("input:checked");
+      if(checked){
+        return checked.value.trim().toLowerCase();
+      }
+    }
+  }
+  return "";
 }
 
-function getMessage(c,s){
-  let r=SIZE_RULES.default;
-  for(const k in SIZE_RULES) if(c.includes(k)) r=SIZE_RULES[k];
-  return r[s]||r.default;
+function getMessage(color,size){
+  let rules = SIZE_RULES.default;
+
+  for(const key in SIZE_RULES){
+    if(color.includes(key)){
+      rules = SIZE_RULES[key];
+      break;
+    }
+  }
+
+  return rules[size] || rules.default;
 }
 
 function updateSizeNote(){
-  const color=getSelected('Color');
-  const size=getSelected('Size');
-  const note=document.getElementById('sizeNote');
-  if(!size||!note) return;
-  note.innerHTML=`<strong>Size ${size}</strong> — ${getMessage(color,size)}`;
-  note.classList.add('active');
+  const color = getSelectedOption("color");
+  const size = getSelectedOption("size");
+  const note = document.getElementById("sizeNote");
+
+  if(!size || !note) return;
+
+  note.innerHTML = `<strong>Size ${size}</strong> — ${getMessage(color,size)}`;
+  note.classList.add("active");
 }
 
-document.addEventListener('variant-changed',updateSizeNote);
-document.addEventListener('click',e=>{if(e.target.closest('.pill'))updateSizeNote();});
-document.addEventListener('DOMContentLoaded',updateSizeNote);
+/* Detect Variant Change Automatically */
+document.querySelectorAll("input[type='radio']").forEach(input=>{
+  input.addEventListener("change", updateSizeNote);
+});
 
-})();
+/* Initial Load */
+updateSizeNote();
+
+});
 </script>
 
 {%- endif -%}
