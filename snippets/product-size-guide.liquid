@@ -1,98 +1,334 @@
-{%- if product.tags contains 'size-directions' -%}
+{%- liquid
+  assign product_tags = product.tags
+  assign has_size_directions_tag = false
+  
+  for tag in product_tags
+    if tag == 'size-directions'
+      assign has_size_directions_tag = true
+      break
+    endif
+  endfor
+-%}
 
-<style>
-.product-size-guide__notification{
-  margin-top:1rem;padding:1rem;background:#e8e8e8;
-  border-left:4px solid #333;display:none
-}
-.product-size-guide__notification.active{display:block}
-.product-size-guide__notification-content{
-  display:flex;gap:10px;align-items:center;font-size:.9rem
-}
-</style>
+{%- if has_size_directions_tag -%}
+  <style>
+    [data-size-recommendations] {
+      position: relative;
+    }
 
-<div class="product-size-guide">
-  <div class="product-size-guide__notification" data-size-note>
-    <div class="product-size-guide__notification-content"></div>
+    [data-size-recommendations] .pill {
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-size-recommendations] .pill:hover {
+      transform: translateY(-2px);
+    }
+
+    .product-size-guide {
+      margin-top: 1rem;
+      margin-bottom: 0;
+    }
+
+    .product-size-guide__notification {
+      background: #e8e8e8;
+      padding: 1rem;
+      border-left: 4px solid #333;
+      margin-top: 1rem;
+      display: none;
+      animation: notificationSlide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-radius: 0px;
+      box-shadow: none;
+    }
+
+    .product-size-guide__notification.active {
+      display: block;
+    }
+
+    .product-size-guide__notification-content {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #333;
+      font-weight: 400;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .product-size-guide__notification-icon {
+      font-size: 1.2rem;
+      font-weight: bold;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .product-size-guide__notification[data-icon="●"] .product-size-guide__notification-icon {
+      color: #333;
+    }
+
+    .product-size-guide__notification[data-icon="↑"] .product-size-guide__notification-icon {
+      color: #333;
+    }
+
+    .product-size-guide__notification[data-icon="↓"] .product-size-guide__notification-icon {
+      color: #333;
+    }
+
+    @keyframes notificationSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .product-size-guide__notification {
+        padding: 0.875rem;
+      }
+
+      .product-size-guide__notification-content {
+        font-size: 0.85rem;
+      }
+
+      .product-size-guide__notification-icon {
+        font-size: 1rem;
+      }
+    }
+  </style>
+
+  <div class='product-size-guide' data-product-size-guide>
+    <div class='product-size-guide__notification' data-size-notification>
+      <div class='product-size-guide__notification-content'></div>
+    </div>
   </div>
-</div>
 
-<script>
-(function(){
+  <script>
+    (function() {
+      // Prepare product options and identify the color option index
+      const PRODUCT_OPTIONS = {{ product.options | json }};
+      const COLOR_OPTION_INDEX = PRODUCT_OPTIONS.findIndex(opt => opt.toLowerCase().includes('color'));
 
-const productId = '{{ product.id }}';
-const sectionId = '{{ sectionId }}';
-const OPTIONS = {{ product.options | json }};
-const COLOR_INDEX = OPTIONS.findIndex(o=>o.toLowerCase().includes('color'));
+      // Function to get current color value
+      function getCurrentColor() {
+        // First try by reading the selected variant JSON embedded in the picker
+        const variantJsonEl = document.querySelector(
+          `[data-section='${sectionId}'][data-product-id='${productId}'] [data-selected-variant-json]`
+        );
 
-function getColor(){
-  const variantJson = document.querySelector(
-    `[data-section='${sectionId}'][data-product-id='${productId}'] [data-selected-variant-json]`
-  );
-  if(!variantJson) return '';
-  try{
-    const v = JSON.parse(variantJson.textContent);
-    return (v.options[COLOR_INDEX] || '').toLowerCase();
-  }catch{return ''}
-}
+        if (variantJsonEl) {
+          try {
+            const variantData = JSON.parse(variantJsonEl.textContent);
+            if (COLOR_OPTION_INDEX !== -1 && variantData.options) {
+              const colorValue = variantData.options[COLOR_OPTION_INDEX] || '';
+              return String(colorValue).toLowerCase();
+            }
+          } catch (err) {
+            console.error('Size guide: failed to parse variant JSON', err);
+          }
+        }
 
-function getRecommendation(color,size){
-  if(color.includes('mid blue'))
-    return {icon:'↑',text:`Size ${size} — go one size up.`};
+        // Fallback: scan the DOM for a selected pill whose parent option name contains "color"
+        const variantPicker = document.querySelector(`[data-product-id="{{ product.id }}"]`);
+        if (variantPicker) {
+          const labels = variantPicker.querySelectorAll('[option-picker-name] .pill.selected .pill__label');
+          for (let lbl of labels) {
+            const parent = lbl.closest('[option-picker-name]');
+            if (parent && parent.getAttribute('option-picker-name').toLowerCase().includes('color')) {
+              return lbl.textContent.trim().toLowerCase();
+            }
+          }
+          // last resort: checked input
+          const checkedInput = variantPicker.querySelector("input[type=radio]:checked[name*='Color']");
+          if (checkedInput) {
+            return checkedInput.value.toLowerCase();
+          }
+        }
 
-  if(color.includes('grey')||color.includes('light blue'))
-    return size==='32'
-      ? {icon:'↑',text:'Size 32 — go one size up.'}
-      : {icon:'●',text:`Size ${size} fits true to size.`};
+        return '';
+      }
 
-  if(color.includes('black'))
-    return {icon:'●',text:`Size ${size} fits true to size.`};
+      // Function to get size recommendations based on color
+      function getSizeRecommendations(color) {
+        const baseRecommendations = {
+          '26': { icon: '●', text: 'Size 26 fits true to size.' },
+          '28': { icon: '●', text: 'Size 28 fits true to size.' },
+          '30': { icon: '●', text: 'Size 30 fits true to size.' },
+          '32': { icon: '●', text: 'Size 32 fits true to size.' },
+          '34': { icon: '●', text: 'Size 34 fits true to size.' },
+          '36': { icon: '●', text: 'Size 36 fits true to size.' }
+        };
 
-  // default
-  if(size==='26') return {icon:'↑',text:'Size 26 — go up to 28.'};
-  if(size==='34') return {icon:'↓',text:'Size 34 — go down to 32.'};
+        const midBlueRecommendations = {
+          '26': { icon: '↑', text: 'Size 26 — we recommend going one size up.' },
+          '28': { icon: '↑', text: 'Size 28 — we recommend going one size up.' },
+          '30': { icon: '↑', text: 'Size 30 — we recommend going one size up.' },
+          '32': { icon: '↑', text: 'Size 32 — we recommend going one size up.' },
+          '34': { icon: '↑', text: 'Size 34 — we recommend going one size up.' },
+          '36': { icon: '↑', text: 'Size 36 — we recommend going one size up.' }
+        };
 
-  return {icon:'●',text:`Size ${size} fits true to size.`};
-}
+        const greyLightBlueRecommendations = {
+          '26': { icon: '●', text: 'Size 26 fits true to size.' },
+          '28': { icon: '●', text: 'Size 28 fits true to size.' },
+          '30': { icon: '●', text: 'Size 30 fits true to size.' },
+          '32': { icon: '↑', text: 'Size 32 — we recommend going one size up.' },
+          '34': { icon: '●', text: 'Size 34 fits true to size.' },
+          '36': { icon: '●', text: 'Size 36 fits true to size.' }
+        };
 
-function showNote(data){
-  const box=document.querySelector('[data-size-note]');
-  const content=box?.querySelector('.product-size-guide__notification-content');
-  if(!box||!content)return;
-  content.innerHTML=`<strong>${data.icon}</strong> ${data.text}`;
-  box.classList.add('active');
-}
+        // Check color and return appropriate recommendations
+        if (color.includes('black')) {
+          return baseRecommendations;
+        } else if (color.includes('mid blue')) {
+          return midBlueRecommendations;
+        } else if (color.includes('grey') || color.includes('light blue')) {
+          return greyLightBlueRecommendations;
+        }
 
-function init(){
-  const wrapper=document.querySelector(
-    `[data-section='${sectionId}'][data-product-id='${productId}']`
-  );
-  if(!wrapper)return;
+        // Default recommendations for other colors
+        return {
+          '26': { icon: '↑', text: 'Size 26 runs small — we suggest going up to size 28.' },
+          '28': { icon: '●', text: 'Size 28 fits true to size.' },
+          '30': { icon: '●', text: 'Size 30 fits true to size.' },
+          '32': { icon: '↑', text: 'Size 32 — we recommend going one size up.' },
+          '34': { icon: '↓', text: 'Size 34 runs large — we suggest going down to size 32.' },
+          '36': { icon: '●', text: 'Size 36 fits true to size.' }
+        };
+      }
 
-  const sizeList=[...wrapper.querySelectorAll('.product-variant-picker__pill-list')]
-    .find(l=>l.parentElement.innerText.toLowerCase().includes('size'));
+      const productId = '{{ product.id }}';
+      const sectionId = '{{ sectionId }}';
 
-  if(!sizeList)return;
+      function findSizePillList() {
+        const variantPicker = document.querySelector(
+          `[data-section='${sectionId}'][data-product-id='${productId}']`
+        );
+        
+        if (!variantPicker) {
+          console.log('Variant picker not found');
+          return null;
+        }
 
-  const color=getColor();
+        const allPillLists = variantPicker.querySelectorAll('.product-variant-picker__pill-list');
+        
+        for (let list of allPillLists) {
+          const parent = list.parentElement;
+          const labelSpans = parent.querySelectorAll('.product-variant-picker__option-label span');
+          
+          for (let span of labelSpans) {
+            if (span.textContent.toLowerCase().trim() === 'size') {
+              return list;
+            }
+          }
+        }
+        
+        return null;
+      }
 
-  sizeList.querySelectorAll('.pill').forEach(pill=>{
-    const size=pill.innerText.trim();
-    pill.onclick=()=>{
-      const data=getRecommendation(color,size);
-      showNote(data);
-    };
-  });
+      function updateNotification(recommendation) {
+        const notification = document.querySelector('[data-size-notification]');
+        const notificationContent = notification?.querySelector('.product-size-guide__notification-content');
+        
+        if (notificationContent && notification) {
+          notification.setAttribute('data-icon', recommendation.icon);
+          notificationContent.innerHTML = `
+            <span class='product-size-guide__notification-icon'>${recommendation.icon}</span>
+            <span>${recommendation.text}</span>
+          `;
+          notification.classList.add('active');
+        }
+      }
 
-  // auto trigger selected
-  const selected=sizeList.querySelector('.pill.selected')||sizeList.querySelector('.pill');
-  if(selected) selected.click();
-}
+      function applySizeRecommendations(sizePillList) {
+        if (!sizePillList) {
+          console.log('Size pill list not found');
+          return;
+        }
 
-document.addEventListener('DOMContentLoaded',()=>setTimeout(init,100));
-document.addEventListener('variant-changed',()=>setTimeout(init,50));
+        // Get current color and get appropriate recommendations
+        const currentColor = getCurrentColor();
+        const SIZE_RECOMMENDATIONS = getSizeRecommendations(currentColor);
 
-})();
-</script>
+        // Mark the list for styling
+        sizePillList.setAttribute('data-size-recommendations', 'true');
 
+        const pills = sizePillList.querySelectorAll('.pill');
+        
+        pills.forEach((pill, index) => {
+          const label = pill.querySelector('.pill__label');
+          const sizeText = label?.textContent.trim() || '';
+          const recommendation = SIZE_RECOMMENDATIONS[sizeText];
+
+          if (recommendation) {
+            // Remove old click listeners by cloning
+            const newPill = pill.cloneNode(true);
+            pill.parentNode.replaceChild(newPill, pill);
+
+            // Add click handler to new pill
+            newPill.addEventListener('click', (e) => {
+              e.stopPropagation();
+              updateNotification(recommendation);
+            });
+          }
+        });
+
+        // Trigger initial recommendation
+        const updatedList = document.querySelector('[data-size-recommendations="true"]');
+        const selectedPill = updatedList?.querySelector('.pill.selected');
+        
+        if (selectedPill) {
+          selectedPill.click();
+        } else {
+          const firstPill = updatedList?.querySelector('.pill');
+          if (firstPill) {
+            firstPill.click();
+          }
+        }
+      }
+
+      function initSizeGuide() {
+        const sizePillList = findSizePillList();
+        if (sizePillList) {
+          applySizeRecommendations(sizePillList);
+        }
+      }
+
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          setTimeout(initSizeGuide, 100);
+        });
+      } else {
+        setTimeout(initSizeGuide, 100);
+      }
+
+      // Re-initialize on variant changes (including color change)
+      document.addEventListener('variant-changed', () => {
+        setTimeout(initSizeGuide, 50);
+      });
+
+      // Listen for color change
+      document.addEventListener('change', (e) => {
+        if (e.target && e.target.name && e.target.name.includes('Color')) {
+          setTimeout(initSizeGuide, 100);
+        } else if (e.target && e.target.name && e.target.name.includes('Size')) {
+          const sizePillList = findSizePillList();
+          if (sizePillList) {
+            const sizeValue = e.target.value;
+            const currentColor = getCurrentColor();
+            const SIZE_RECOMMENDATIONS = getSizeRecommendations(currentColor);
+            const recommendation = SIZE_RECOMMENDATIONS[sizeValue];
+            if (recommendation) {
+              updateNotification(recommendation);
+            }
+          }
+        }
+      });
+    })();
+  </script>
 {%- endif -%}
