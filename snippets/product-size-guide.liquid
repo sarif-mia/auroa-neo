@@ -21,46 +21,8 @@
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    [data-size-recommendations] .pill::before {
-      content: attr(data-size-icon);
-      position: absolute;
-      top: -12px;
-      right: 0px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #e5e5e5;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 10;
-    }
-
     [data-size-recommendations] .pill:hover {
       transform: translateY(-2px);
-    }
-
-    [data-size-recommendations] .pill:hover::before {
-      border-color: #666;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-      transform: scale(1.1);
-    }
-
-    [data-size-recommendations] .pill[data-size-icon="●"]::before {
-      color: #2c3e50;
-    }
-
-    [data-size-recommendations] .pill[data-size-icon="↑"]::before {
-      color: #e74c3c;
-    }
-
-    [data-size-recommendations] .pill[data-size-icon="↓"]::before {
-      color: #3498db;
     }
 
     .product-size-guide {
@@ -104,14 +66,6 @@
     }
 
     @media (max-width: 768px) {
-      [data-size-recommendations] .pill::before {
-        top: -10px;
-        width: 22px;
-        height: 22px;
-        font-size: 0.8rem;
-        border-width: 1.5px;
-      }
-
       .product-size-guide__notification {
         padding: 0.875rem;
       }
@@ -132,12 +86,12 @@
     (function() {
       // Configuration
       const SIZE_RECOMMENDATIONS = {
-        '26': { icon: '↑', text: 'Size 26 runs small — we suggest going up to size 28.' },
-        '28': { icon: '●', text: 'Size 28 fits true to size.' },
-        '30': { icon: '●', text: 'Size 30 fits true to size.' },
-        '32': { icon: '↑', text: 'Size 32 — we recommend going one size up.' },
-        '34': { icon: '↓', text: 'Size 34 runs large — we suggest going down to size 32.' },
-        '36': { icon: '●', text: 'Size 36 fits true to size.' }
+        '26': { text: 'Size 26 runs small — we suggest going up to size 28.' },
+        '28': { text: 'Size 28 fits true to size.' },
+        '30': { text: 'Size 30 fits true to size.' },
+        '32': { text: 'Size 32 — we recommend going one size up.' },
+        '34': { text: 'Size 34 runs large — we suggest going down to size 32.' },
+        '36': { text: 'Size 36 fits true to size.' }
       };
 
       const productId = '{{ product.id }}';
@@ -198,9 +152,6 @@
           const recommendation = SIZE_RECOMMENDATIONS[sizeText];
 
           if (recommendation) {
-            // Set data attribute for icon styling
-            pill.setAttribute('data-size-icon', recommendation.icon);
-
             // Remove old click listeners by cloning
             const newPill = pill.cloneNode(true);
             pill.parentNode.replaceChild(newPill, pill);
