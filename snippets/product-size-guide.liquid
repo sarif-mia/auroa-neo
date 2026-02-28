@@ -22,7 +22,8 @@
     endfor
     
     if color_option_index
-      assign selected_color = product.selected_or_first_available_variant.options[color_option_index | minus: 1]
+      assign color_index = color_option_index | minus: 1
+      assign selected_color = product.selected_or_first_available_variant.options[color_index]
     endif
     
     assign selected_color_down = selected_color | downcase | strip
