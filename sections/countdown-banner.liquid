@@ -180,13 +180,7 @@
         -%}
         <div class='countdown-banner__content-wrap'>
           <div class='countdown-banner__content countdown-banner__content--desktop {% if desktop_content_background != 'none' %} countdown-banner__content--with-{{ desktop_content_background }}-background{% endif %}'>
-            {%
-              render 'countdown-banner-content',
-              section: section,
-              blocks: blocks,, section_color_scheme: color_scheme,
-              section_id: section.id,
-              ensure_width: true
-            %}
+            {% render 'countdown-banner-content', section: section, blocks: blocks, section_color_scheme: color_scheme, section_id: section.id, ensure_width: true %}
           </div>
 
           <div class='countdown-banner__content countdown-banner__content--mobile {% if mobile_content_background != 'none' %} countdown-banner__content--with-{{ mobile_content_background }}-background{% endif %}'>
@@ -1526,3 +1520,21 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {%
+                  render 'countdown-banner-content',
+                  section: section,
+                  blocks: blocks,, section_color_scheme: color_scheme,
+                  section_id: section.id,
+                  ensure_width: true
+                %}
+  to: "{% render 'countdown-banner-content', section: section, blocks: blocks, section_color_scheme:
+    color_scheme, section_id: section.id, ensure_width: true %}"
+  position: 8171..8324
+{% endcomment %}
